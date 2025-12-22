@@ -5,43 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ name }}</title>
     
-    <script type='text/javascript' src='//your-smartlink-provider.com/script.js'></script>
-    <script type="text/javascript">
-        // Aapka Smartlink ID: 28212617 yahan link hoga
-        // Isse pop-up ads active ho jayenge
-    </script>
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #4f46e5; --bg: #f3f4f6; --fb: #1877F2; --ig: #E4405F; --wa: #25D366; --tg: #0088cc; }
+        :root { --primary: #4f46e5; --bg: #f3f4f6; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
-        
         .chat-card { width: 100%; max-width: 500px; height: 500px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; margin-bottom: 20px; }
         .header { background: var(--primary); color: white; padding: 15px; display: flex; align-items: center; gap: 15px; }
         .header img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid white; }
-        
-        .links-bar { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; padding: 10px; background: #fff; border-bottom: 1px solid #eee; }
-        .s-btn { text-decoration: none; color: white; padding: 6px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
-        .bg-fb { background: var(--fb); } .bg-ig { background: var(--ig); } .bg-wa { background: var(--wa); } .bg-tg { background: var(--tg); } .bg-news { background: var(--primary); }
-
         #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
         .msg { padding: 10px 15px; border-radius: 15px; font-size: 14px; max-width: 85%; }
         .bot { background: var(--primary); color: white; align-self: flex-start; }
         .user { background: #e2e2e2; color: #333; align-self: flex-end; }
-
         .input-area { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white; }
         input { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 10px; outline: none; }
         .send-btn { background: var(--primary); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
-
-        .gallery { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 20px; }
+        
+        /* Gallery & Ads */
+        .gallery { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; }
         .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .card img { width: 100%; height: auto; display: block; }
-        .card-info { padding: 12px; text-align: left; }
-        .card-text { font-size: 14px; color: #444; font-weight: 500; }
-
-        /* Ad unit under each photo */
-        .ad-unit { width: 100%; background: #fff; border: 1px dashed #bbb; border-radius: 10px; padding: 10px; text-align: center; margin-top: -10px; margin-bottom: 10px; }
+        .ad-unit { width: 100%; background: #fff; border: 1px dashed #bbb; border-radius: 10px; padding: 12px; text-align: center; margin-top: -10px; }
+        .ad-link { font-size: 14px; color: var(--primary); text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -51,37 +36,27 @@
             <img src="{{ avatar }}" alt="Agent">
             <div><strong>{{ name }}</strong></div>
         </div>
-        
-        <div class="links-bar">
-            <a href="{{ telegram_link }}" class="s-btn bg-tg"><i class="fab fa-telegram"></i> TG</a>
-            <a href="{{ whatsapp_link }}" class="s-btn bg-wa"><i class="fab fa-whatsapp"></i> WA</a>
-            <a href="{{ facebook_link }}" class="s-btn bg-fb"><i class="fab fa-facebook"></i> FB</a>
-            <a href="{{ instagram_link }}" class="s-btn bg-ig"><i class="fab fa-instagram"></i> IG</a>
-            <a href="{{ news_link }}" class="s-btn bg-news"><i class="fas fa-newspaper"></i> NEWS</a>
-        </div>
-
         <div id="chat-box">
             <div class="msg bot">Namaste! Main Raj ka assistant hoon. Bataiye aap kya janna chahte hain?</div>
         </div>
         <div class="input-area">
-            <input type="text" id="user-input" placeholder="Type here...">
+            <input type="text" id="user-input" placeholder="Kuch poochiye...">
             <button class="send-btn" onclick="send()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
     <div class="gallery">
-        <h3 style="text-align: center; color: #333; margin-bottom: 10px;">Media Updates</h3>
         {% for photo in photos %}
         <div class="card">
-            <img src="{{ photo.url }}" alt="Media Content">
-            <div class="card-info">
-                <p class="card-text">{{ photo.text }}</p>
-            </div>
+            <img src="{{ photo.url }}" alt="Media">
+            <div style="padding: 10px; font-size: 14px;">{{ photo.text }}</div>
         </div>
 
         <div class="ad-unit">
-            <p style="font-size: 9px; color: #999;">ADVERTISEMENT</p>
-            <a href="YAHAN_APNA_SMARTLINK_URL_DALEIN" target="_blank" style="font-size: 13px; color: var(--primary); text-decoration: none; font-weight: bold;">[ Click to Unlock Content ]</a>
+            <p style="font-size: 10px; color: #999; margin-bottom: 5px;">SPONSORED</p>
+            <a href="{{ smart_link }}" target="_blank" class="ad-link">
+                <i class="fas fa-external-link-alt"></i> Click to Open Media File
+            </a>
         </div>
         {% endfor %}
     </div>
