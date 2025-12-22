@@ -3,102 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asam News - Sabse Tez Updates</title>
+    <title>Asam News | Sabse Tez Sabse Aage</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* News Theme CSS */
-        body { background: #f4f4f4; color: #333; font-family: 'Roboto', sans-serif; margin: 0; padding: 0; }
-        
-        /* Breaking News Ticker */
-        .ticker { background: #d32f2f; color: white; padding: 10px; overflow: hidden; white-space: nowrap; position: relative; font-weight: bold; }
-        .ticker span { display: inline-block; padding-left: 100%; animation: ticker 20s linear infinite; }
-        @keyframes ticker { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
-
-        /* Professional Header */
-        header { background: #1a237e; color: white; padding: 20px; text-align: center; border-bottom: 5px solid #d32f2f; }
-        header h1 { margin: 0; font-size: 2.5rem; text-transform: uppercase; border-bottom: 2px solid white; display: inline-block; padding-bottom: 5px; }
-        
-        /* Social & Telegram */
-        .social-nav { background: #fff; padding: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); sticky: top; }
-        .social-nav a { color: #1a237e; margin: 0 10px; font-size: 20px; text-decoration: none; }
-        .tg-link { background: #0088cc; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-size: 14px; font-weight: bold; }
-
-        /* News Feed */
-        .container { padding: 15px; display: flex; flex-direction: column; align-items: center; }
-        .news-card { background: white; width: 100%; max-width: 600px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; }
-        .news-card img { width: 100%; height: auto; }
-        .news-content { padding: 15px; }
-        .news-content h2 { margin: 0 0 10px 0; color: #1a237e; font-size: 1.4rem; }
-        .news-content p { color: #555; line-height: 1.5; font-size: 1rem; }
-        
-        /* Like & Comment Section */
-        .meta { display: flex; justify-content: space-between; padding: 10px 15px; border-top: 1px solid #eee; background: #fafafa; }
-        .meta-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 14px; }
-        .meta-btn:hover { color: #d32f2f; }
-        .comment-box { width: 95%; margin: 10px auto; display: block; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-
-        /* Ad Slots for News */
-        .news-ad { background: #fffde7; border: 1px solid #fbc02d; padding: 20px; width: 90%; max-width: 600px; margin: 20px auto; text-align: center; color: #f57f17; font-weight: bold; }
+        :root { --main-red: #c62828; --dark-blue: #1a237e; }
+        body { font-family: 'Helvetica', sans-serif; background: #f4f4f4; margin: 0; padding-bottom: 50px; }
+        .top-bar { background: var(--dark-blue); color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 24px; border-bottom: 4px solid var(--main-red); }
+        .ticker-wrap { background: #eee; padding: 5px; overflow: hidden; border-bottom: 1px solid #ddd; }
+        .ticker { display: inline-block; white-space: nowrap; animation: marquee 25s linear infinite; color: var(--main-red); font-weight: bold; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .container { display: flex; flex-wrap: wrap; max-width: 1200px; margin: 20px auto; gap: 20px; padding: 0 10px; }
+        .news-section { flex: 2; min-width: 300px; }
+        .card { background: white; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; }
+        .card img { width: 100%; height: 250px; object-fit: cover; }
+        .card-body { padding: 15px; }
+        .card-body h2 { margin: 0; color: #333; font-size: 1.5rem; }
+        .sidebar { flex: 1; min-width: 300px; }
+        .ad-box { background: #fffde7; border: 1px dashed #fbc02d; padding: 20px; text-align: center; margin-bottom: 20px; border-radius: 5px; color: #f57f17; font-weight: bold; }
+        @media (max-width: 800px) { .container { flex-direction: column; } }
     </style>
 </head>
 <body>
 
-    <div class="ticker">
-        <span>📢 BREAKING NEWS: Asam News par aapka swagat hai! | Local updates ke liye Telegram join karein | Aaj ki badi khabar... </span>
+    <div class="top-bar">ASAM NEWS 📰</div>
+
+    <div class="ticker-wrap">
+        <div class="ticker">📢 BREAKING: Rajdev-site par aaj se asli ads shuru! | Latest local updates ke liye page ko scroll karein... </div>
     </div>
 
-    <header>
-        <h1>ASAM NEWS</h1>
-        <p>Sacchai Aap Tak, Sabse Pehle</p>
-    </header>
+    <div class="container">
+        <div class="news-section" id="main-feed">
+            </div>
 
-    <div class="social-nav">
-        <a href="https://t.me/+u4cmm3JmIrFlNzZl" class="tg-link"><i class="fab fa-telegram"></i> JOIN TELEGRAM</a>
-        <a href="https://www.instagram.com/itz_dminem_official43?igsh=MTZpNGMwOGwwMWl5dA=="><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/share/1Dnme182xd/"><i class="fab fa-facebook"></i></a>
-    </div>
-
-    <div class="container" id="news-feed">
+        <div class="sidebar">
+            <div class="ad-box">
+                <small>SPONSORED AD</small><br>
+                Adsterra Social Bar is Active!
+            </div>
+            <div style="background:white; padding:15px; border-radius:5px;">
+                <h3 style="border-bottom:2px solid var(--main-red);">TRENDING</h3>
+                <p>1. Asam News par naye ads live.</p>
+                <p>2. Mobile coding ki nayi duniya.</p>
+                <a href="https://t.me/+u4cmm3JmIrFlNzZl" style="color:blue; text-decoration:none; font-weight:bold;">Join Telegram</a>
+            </div>
         </div>
+    </div>
 
     <script>
-        const newsFeed = document.getElementById('news-feed');
-        const newsTitles = [
-            "Badi Khabar: Shehar mein naya bridge taiyar",
-            "Mausam Update: Agle 24 ghante mein barish ki sambhavna",
-            "Sports: Local tournament mein Asam Team ki jeet",
-            "Technology: Naya 5G tower ab aapke area mein",
-            "Health Tips: Thand mein kaise rakhein apna khayal"
-        ];
-
-        for(let i=1; i<=20; i++) {
-            const titleIndex = i % newsTitles.length;
-            const card = document.createElement('div');
-            card.className = 'news-card';
-            card.innerHTML = `
-                <img src="https://picsum.photos/600/350?random=${i}" alt="News Image">
-                <div class="news-content">
-                    <h2>${newsTitles[titleIndex]} #${i}</h2>
-                    <p>Asam News ki vishesh report ke mutabik, aaj shehar mein kaafi halchal rahi. Poori khabar janne ke liye niche comment karein aur video dekhein...</p>
+        const feed = document.getElementById('main-feed');
+        for(let i=1; i<=10; i++) {
+            feed.innerHTML += `
+                <div class="card">
+                    <img src="https://picsum.photos/800/400?random=${i}" alt="News">
+                    <div class="card-body">
+                        <h2>Samachar Update #${i}: Asam News Vishesh Report</h2>
+                        <p>Aaj ki sabse badi khabar aapke liye yahan hai. Pura report dekhne ke liye bane rahein...</p>
+                        <button style="background:var(--main-red); color:white; border:none; padding:10px; border-radius:3px; cursor:pointer;">Pura Padhein</button>
+                    </div>
                 </div>
-                <div class="meta">
-                    <button class="meta-btn" onclick="this.style.color='red'"><i class="fas fa-heart"></i> Like</button>
-                    <button class="meta-btn"><i class="fas fa-share"></i> Share</button>
-                    <span style="font-size: 12px; color: #999;">${new Date().toLocaleDateString()}</span>
-                </div>
-                <input type="text" class="comment-box" placeholder="Apni raye likhein...">
             `;
-            newsFeed.appendChild(card);
-
-            // In-feed Ads (हर 4 न्यूज़ के बाद)
-            if(i % 4 == 0) {
-                const ad = document.createElement('div');
-                ad.className = 'news-ad';
-                ad.innerHTML = '<small>SPONSORED AD</small><br>Google Adsense / Adsterra Ad Code Here';
-                newsFeed.appendChild(ad);
-            }
         }
     </script>
 
-</body>
+    <script type='text/javascript' src='//pl28312947.effectivegatecpm.com/80/9b/11/809b1106bcc077583a525aedbf118d43.js'></script>
+    </body>
 </html>
