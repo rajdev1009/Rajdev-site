@@ -1,143 +1,95 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asam News | Rajdev Official</title>
+    <title>{{ name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* CSS Variables & Background */
-        :root {
-            --primary-green: #1b5e20;
-            --neon-glow: #00ff00;
-            --highlight-yellow: #ffff00;
-            --white: #ffffff;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--primary-green); 
-            color: white;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Top Header & Ticker */
-        header { background: #000; padding: 20px; text-align: center; border-bottom: 3px solid var(--neon-glow); }
-        .breaking-ticker { background: var(--highlight-yellow); color: #000; padding: 10px; font-weight: bold; overflow: hidden; }
-        .ticker-move { display: inline-block; white-space: nowrap; animation: move 20s linear infinite; }
-        @keyframes move { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        /* News Section */
-        .container { max-width: 900px; margin: 20px auto; padding: 15px; }
-        .news-card { background: rgba(255, 255, 255, 0.1); border: 2px solid var(--neon-glow); border-radius: 15px; margin-bottom: 40px; padding: 20px; backdrop-filter: blur(5px); }
-        .news-card img { width: 100%; border-radius: 10px; height: 300px; object-fit: cover; border-bottom: 2px solid var(--neon-glow); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        /* Highlighted Adsterra Buttons */
-        .ad-btn {
-            display: block;
-            text-align: center;
-            background: linear-gradient(45deg, #ff0000, #ffeb3b);
-            color: #000;
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.2rem;
-            animation: pulse-glow 1.5s infinite;
-            box-shadow: 0 0 15px var(--neon-glow);
-        }
+        /* Chat Styling */
+        .chat-card { width: 100%; max-width: 500px; height: 500px; background: #fff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; margin-bottom: 30px; }
+        .chat-header { background: #6c5ce7; color: white; padding: 15px; display: flex; align-items: center; gap: 15px; }
+        .chat-header img { width: 40px; height: 40px; border-radius: 50%; background: #fff; }
+        #chat-box { flex: 1; padding: 20px; overflow-y: auto; background: #fafafa; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 14px; }
+        .bot-msg { background: #6c5ce7; color: white; align-self: flex-start; }
+        .user-msg { background: #e2e2e2; color: #333; align-self: flex-end; }
 
-        @keyframes pulse-glow {
-            0% { transform: scale(1); box-shadow: 0 0 5px var(--neon-glow); }
-            50% { transform: scale(1.05); box-shadow: 0 0 25px var(--neon-glow); }
-            100% { transform: scale(1); box-shadow: 0 0 5px var(--neon-glow); }
-        }
+        /* Gallery Styling */
+        .gallery-container { width: 100%; max-width: 900px; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .gallery-title { text-align: center; margin-bottom: 20px; font-weight: 600; color: #333; }
+        .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .photo-item { border: 1px solid #eee; border-radius: 15px; overflow: hidden; background: #fff; transition: 0.3s; }
+        .photo-item:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .photo-item img { width: 100%; height: 150px; object-fit: cover; }
+        .photo-info { padding: 10px; text-align: center; }
+        .photo-id { font-size: 12px; color: #6c5ce7; font-weight: bold; }
+        .photo-text { font-size: 13px; color: #555; margin-top: 5px; }
 
-        /* Owner Profile Section (At the very end) */
-        .owner-section {
-            background: #000;
-            padding: 50px 20px;
-            text-align: center;
-            border-top: 5px solid var(--neon-glow);
-            margin-top: 100px;
-        }
-        .owner-photo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 4px solid var(--neon-glow);
-            box-shadow: 0 0 20px var(--neon-glow);
-            margin-bottom: 15px;
-        }
-        .owner-name { font-size: 2.5rem; color: var(--neon-glow); margin-bottom: 20px; text-shadow: 0 0 10px var(--neon-glow); }
-        
-        /* Social Media Glow Buttons */
-        .social-links { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
-        .social-btn {
-            color: white;
-            font-size: 2rem;
-            text-decoration: none;
-            transition: 0.3s;
-            padding: 10px;
-            border: 1px solid transparent;
-        }
-        .social-btn:hover { color: var(--neon-glow); text-shadow: 0 0 20px var(--neon-glow); transform: translateY(-5px); }
-        
-        /* Highlighted Highlight Bottom Text */
-        .highlight-id { color: var(--highlight-yellow); font-weight: bold; border-bottom: 1px dashed var(--highlight-yellow); }
-
+        .input-area { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; }
+        input { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 20px; outline: none; }
+        button { background: #6c5ce7; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>ASAM NEWS PORTAL</h1>
-    </header>
-
-    <div class="breaking-ticker">
-        <div class="ticker-move">⚡ BREAKING NEWS: Rajdev News Site is now Live! | Enjoy the best local news and updates | Join our Telegram for Direct Links ⚡</div>
-    </div>
-
-    <div class="container" id="news-container">
+    <div class="chat-card">
+        <div class="chat-header">
+            <img src="{{ avatar }}" alt="Avatar">
+            <div><strong>{{ name }}</strong></div>
         </div>
-
-    <div class="owner-section">
-        <img src="https://i.ibb.co/qFyMDRk8/IMG-20251130-WA0108-2.jpg" alt="Rajdev" class="owner-photo">
-        <div class="owner-name">OWNER: RAJDEV</div>
-        
-        <p>Follow me on Social Media:</p>
-        <div class="social-links">
-            <a href="https://t.me/your_telegram" class="social-btn"><i class="fab fa-telegram"></i></a>
-            <a href="https://facebook.com/your_fb" class="social-btn"><i class="fab fa-facebook"></i></a>
-            <a href="https://instagram.com/your_insta" class="social-btn"><i class="fab fa-instagram"></i></a>
+        <div id="chat-box">
+            <div class="msg bot-msg">Namaste! Main Raj ka assistant hoon. Bataiye aap kya janna chahte hain?</div>
         </div>
-
-        <div style="margin-top: 40px; font-size: 14px; opacity: 0.7;">
-            <p>Monetized by <span class="highlight-id">Adsterra Smartlink 28212617</span></p>
-            <p>&copy; 2025 Asam News | All Rights Reserved</p>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Kuch poochiye...">
+            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <script>
-        // Long Scroll News Generator
-        const newsContainer = document.getElementById('news-container');
-        for (let i = 1; i <= 20; i++) {
-            newsContainer.innerHTML += `
-                <div class="news-card">
-                    <img src="https://picsum.photos/800/400?random=${i}" alt="News">
-                    <h2>Aaj ki Badi Khabar #${i}</h2>
-                    <p>Asam aur desh ki sabse tez khabar ab aapki screen par. Is report mein hum dikhayenge shehar ka asli haal. Rajdev site par bane rahein...</p>
-                    <a href="https://pl28312947.effectivegatecpm.com/80/9b/11/809b1106bcc077583a525aedbf118d43.js" class="ad-btn">
-                        CLICK HERE TO READ FULL REPORT
-                    </a>
+    <div class="gallery-container">
+        <h2 class="gallery-title">Raj's Media Gallery</h2>
+        <div class="photo-grid">
+            {% for photo in photos %}
+            <div class="photo-item">
+                <img src="{{ photo.url }}" alt="Photo {{ photo.id }}">
+                <div class="photo-info">
+                    <div class="photo-id">Image #{{ photo.id }}</div>
+                    <div class="photo-text">{{ photo.text }}</div>
                 </div>
-            `;
-        }
-    </script>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 
-    <script type='text/javascript' src='//pl28312947.effectivegatecpm.com/80/9b/11/809b1106bcc077583a525aedbf118d43.js'></script>
+<script>
+    async function sendMessage() {
+        const input = document.getElementById('user-input');
+        const chatBox = document.getElementById('chat-box');
+        if (!input.value.trim()) return;
+
+        chatBox.innerHTML += `<div class="msg user-msg">${input.value}</div>`;
+        const userMsg = input.value;
+        input.value = '';
+
+        try {
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMsg })
+            });
+            const data = await response.json();
+            chatBox.innerHTML += `<div class="msg bot-msg">${data.reply}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        } catch (e) {
+            chatBox.innerHTML += `<div class="msg bot-msg">Connection error!</div>`;
+        }
+    }
+</script>
 
 </body>
 </html>
