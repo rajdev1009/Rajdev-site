@@ -10,7 +10,7 @@ app = Flask(__name__)
 api_key = os.environ.get("GEMINI_API_KEY") or Config.API_KEY
 genai.configure(api_key=api_key)
 
-# 2025 Latest Gemini 2.5 Flash Model
+# Gemini 2.5 Flash 2025 Update
 model = genai.GenerativeModel(
     model_name="gemini-2.5-flash", 
     system_instruction=Config.SYSTEM_INSTRUCTION
@@ -26,6 +26,7 @@ def index():
                            whatsapp_link=BOT_CONFIG["WHATSAPP_LINK"],
                            facebook_link=BOT_CONFIG["FACEBOOK_LINK"],
                            instagram_link=BOT_CONFIG["INSTAGRAM_LINK"],
+                           smart_link=BOT_CONFIG["SMARTLINK_URL"], # Ye line zaroori hai
                            photos=PHOTO_GALLERY)
 
 @app.route('/chat', methods=['POST'])
@@ -37,7 +38,7 @@ def chat():
         response = chat_session.send_message(user_message)
         return jsonify({"reply": response.text})
     except Exception as e:
-        return jsonify({"reply": "System Error: " + str(e)})
+        return jsonify({"reply": "Error: " + str(e)})
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8000))
