@@ -4,92 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ name }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        body { background: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        :root { --primary: #4f46e5; --bg: #f3f4f6; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        /* Chat Styling */
-        .chat-card { width: 100%; max-width: 500px; height: 500px; background: #fff; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; margin-bottom: 30px; }
-        .chat-header { background: #6c5ce7; color: white; padding: 15px; display: flex; align-items: center; gap: 15px; }
-        .chat-header img { width: 40px; height: 40px; border-radius: 50%; background: #fff; }
-        #chat-box { flex: 1; padding: 20px; overflow-y: auto; background: #fafafa; display: flex; flex-direction: column; gap: 10px; }
-        .msg { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 14px; }
-        .bot-msg { background: #6c5ce7; color: white; align-self: flex-start; }
-        .user-msg { background: #e2e2e2; color: #333; align-self: flex-end; }
+        /* Chat Design */
+        .chat-container { width: 100%; max-width: 500px; height: 550px; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; margin-bottom: 40px; }
+        .header { background: var(--primary); color: white; padding: 15px; display: flex; align-items: center; gap: 12px; }
+        .header img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid white; }
+        #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
+        .msg { padding: 10px 16px; border-radius: 12px; font-size: 14px; max-width: 80%; line-height: 1.5; }
+        .bot { background: var(--primary); color: white; align-self: flex-start; }
+        .user { background: #e5e7eb; color: #1f2937; align-self: flex-end; }
 
-        /* Gallery Styling */
-        .gallery-container { width: 100%; max-width: 900px; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .gallery-title { text-align: center; margin-bottom: 20px; font-weight: 600; color: #333; }
-        .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .photo-item { border: 1px solid #eee; border-radius: 15px; overflow: hidden; background: #fff; transition: 0.3s; }
-        .photo-item:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .photo-item img { width: 100%; height: 150px; object-fit: cover; }
-        .photo-info { padding: 10px; text-align: center; }
-        .photo-id { font-size: 12px; color: #6c5ce7; font-weight: bold; }
-        .photo-text { font-size: 13px; color: #555; margin-top: 5px; }
+        /* Input Design */
+        .input-box { padding: 15px; background: white; border-top: 1px solid #eee; display: flex; gap: 10px; }
+        input { flex: 1; border: 1px solid #ddd; padding: 10px 15px; border-radius: 8px; outline: none; }
+        button { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; }
 
-        .input-area { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; }
-        input { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 20px; outline: none; }
-        button { background: #6c5ce7; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
+        /* Gallery Design */
+        .gallery-wrap { width: 100%; max-width: 1000px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+        .card-info { padding: 12px; }
+        .card-id { color: var(--primary); font-weight: bold; font-size: 14px; }
+        .card-text { font-size: 13px; color: #4b5563; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="chat-card">
-        <div class="chat-header">
-            <img src="{{ avatar }}" alt="Avatar">
+    <div class="chat-container">
+        <div class="header">
+            <img src="{{ avatar }}" alt="Agent">
             <div><strong>{{ name }}</strong></div>
         </div>
         <div id="chat-box">
-            <div class="msg bot-msg">Namaste! Main Raj ka assistant hoon. Bataiye aap kya janna chahte hain?</div>
+            <div class="msg bot">Namaste! Main Raj ka assistant hoon. Bataiye aap kya janna chahte hain?</div>
         </div>
-        <div class="input-area">
-            <input type="text" id="user-input" placeholder="Kuch poochiye...">
-            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        <div class="input-box">
+            <input type="text" id="user-input" placeholder="Yahan likhein...">
+            <button onclick="send()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <div class="gallery-container">
-        <h2 class="gallery-title">Raj's Media Gallery</h2>
-        <div class="photo-grid">
+    <div class="gallery-wrap">
+        <h2 style="text-align: center; color: #1f2937;">Media Files</h2>
+        <div class="grid">
             {% for photo in photos %}
-            <div class="photo-item">
-                <img src="{{ photo.url }}" alt="Photo {{ photo.id }}">
-                <div class="photo-info">
-                    <div class="photo-id">Image #{{ photo.id }}</div>
-                    <div class="photo-text">{{ photo.text }}</div>
+            <div class="card">
+                <img src="{{ photo.url }}" alt="Media">
+                <div class="card-info">
+                    <div class="card-id">#{{ photo.id }}</div>
+                    <div class="card-text">{{ photo.text }}</div>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
 
-<script>
-    async function sendMessage() {
-        const input = document.getElementById('user-input');
-        const chatBox = document.getElementById('chat-box');
-        if (!input.value.trim()) return;
+    <script>
+        async function send() {
+            const input = document.getElementById('user-input');
+            const chatBox = document.getElementById('chat-box');
+            if (!input.value) return;
 
-        chatBox.innerHTML += `<div class="msg user-msg">${input.value}</div>`;
-        const userMsg = input.value;
-        input.value = '';
+            chatBox.innerHTML += `<div class="msg user">${input.value}</div>`;
+            const msg = input.value;
+            input.value = '';
 
-        try {
-            const response = await fetch('/chat', {
+            const res = await fetch('/chat', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMsg })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: msg})
             });
-            const data = await response.json();
-            chatBox.innerHTML += `<div class="msg bot-msg">${data.reply}</div>`;
+            const data = await res.json();
+            chatBox.innerHTML += `<div class="msg bot">${data.reply}</div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
-        } catch (e) {
-            chatBox.innerHTML += `<div class="msg bot-msg">Connection error!</div>`;
         }
-    }
-</script>
-
+    </script>
 </body>
 </html>
