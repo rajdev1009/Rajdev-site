@@ -6,10 +6,10 @@ BOT_CONFIG = {
     "NEWS_LINK": "https://news.google.com",
     
     # APNE ASLI LINKS YAHAN PASTE KAREIN
-    "TELEGRAM_LINK": "YAHAN_TELEGRAM_LINK_DALEIN",
-    "WHATSAPP_LINK": "YAHAN_WHATSAPP_LINK_DALEIN",
-    "FACEBOOK_LINK": "YAHAN_FACEBOOK_LINK_DALEIN",
-    "INSTAGRAM_LINK": "YAHAN_INSTAGRAM_LINK_DALEIN"
+    "TELEGRAM_LINK": "https://t.me/+u4cmm3JmIrFlNzZl",
+    "WHATSAPP_LINK": "https://www.instagram.com/itz_dminem_official43?",
+    "FACEBOOK_LINK": "https://www.facebook.com/share/1JJS7cMkpr/",
+    "INSTAGRAM_LINK": "https://www.instagram.com/itz_dminem_official43?"
 }
 
 # 20 Photos with default text (No IDs)
