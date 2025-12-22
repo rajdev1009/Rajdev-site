@@ -3,108 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rajdev Movie Hub</title>
+    <title>Asam News - Sabse Tez Updates</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Khatarnak Dark Theme */
-        body { background: #080808; color: white; font-family: 'Arial', sans-serif; margin: 0; padding: 0; }
+        /* News Theme CSS */
+        body { background: #f4f4f4; color: #333; font-family: 'Roboto', sans-serif; margin: 0; padding: 0; }
         
-        /* Header & Telegram Join Area */
-        header { background: linear-gradient(45deg, #0088cc, #004466); padding: 20px; text-align: center; sticky: top; }
-        .tg-btn { background: white; color: #0088cc; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,136,204,0.5); }
-        
-        /* Social Media Icons */
-        .social-bar { background: #1a1a1a; padding: 10px; text-align: center; }
-        .social-bar a { color: white; margin: 0 15px; font-size: 24px; text-decoration: none; transition: 0.3s; }
-        .social-bar .fa-instagram:hover { color: #e1306c; }
-        .social-bar .fa-facebook:hover { color: #1877f2; }
+        /* Breaking News Ticker */
+        .ticker { background: #d32f2f; color: white; padding: 10px; overflow: hidden; white-space: nowrap; position: relative; font-weight: bold; }
+        .ticker span { display: inline-block; padding-left: 100%; animation: ticker 20s linear infinite; }
+        @keyframes ticker { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-        /* Ads Section */
-        .ad-spot { background: #222; border: 1px dashed #555; margin: 20px auto; padding: 15px; width: 90%; text-align: center; color: #888; border-radius: 8px; }
+        /* Professional Header */
+        header { background: #1a237e; color: white; padding: 20px; text-align: center; border-bottom: 5px solid #d32f2f; }
+        header h1 { margin: 0; font-size: 2.5rem; text-transform: uppercase; border-bottom: 2px solid white; display: inline-block; padding-bottom: 5px; }
+        
+        /* Social & Telegram */
+        .social-nav { background: #fff; padding: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); sticky: top; }
+        .social-nav a { color: #1a237e; margin: 0 10px; font-size: 20px; text-decoration: none; }
+        .tg-link { background: #0088cc; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-size: 14px; font-weight: bold; }
 
-        /* Photo Gallery Container */
-        .gallery { padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        /* News Feed */
+        .container { padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        .news-card { background: white; width: 100%; max-width: 600px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        .news-card img { width: 100%; height: auto; }
+        .news-content { padding: 15px; }
+        .news-content h2 { margin: 0 0 10px 0; color: #1a237e; font-size: 1.4rem; }
+        .news-content p { color: #555; line-height: 1.5; font-size: 1rem; }
         
-        /* Movie Card Style */
-        .post-card { background: #121212; width: 100%; max-width: 450px; margin-bottom: 30px; border-radius: 12px; overflow: hidden; border: 1px solid #333; }
-        .post-card img { width: 100%; height: auto; display: block; }
-        
-        /* Actions: Like & Comment */
-        .actions { padding: 15px; border-top: 1px solid #222; }
-        .btn-action { background: none; border: none; color: #bbb; font-size: 18px; cursor: pointer; margin-right: 20px; transition: 0.2s; }
-        .btn-action:hover { color: #ff0055; }
-        .btn-action.liked { color: #ff0055; }
-        
-        .comment-box { width: 90%; background: #222; border: 1px solid #444; color: white; padding: 8px; border-radius: 5px; margin-top: 10px; }
-        
-        footer { padding: 40px; text-align: center; color: #555; font-size: 12px; }
+        /* Like & Comment Section */
+        .meta { display: flex; justify-content: space-between; padding: 10px 15px; border-top: 1px solid #eee; background: #fafafa; }
+        .meta-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 14px; }
+        .meta-btn:hover { color: #d32f2f; }
+        .comment-box { width: 95%; margin: 10px auto; display: block; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+
+        /* Ad Slots for News */
+        .news-ad { background: #fffde7; border: 1px solid #fbc02d; padding: 20px; width: 90%; max-width: 600px; margin: 20px auto; text-align: center; color: #f57f17; font-weight: bold; }
     </style>
 </head>
 <body>
 
+    <div class="ticker">
+        <span>📢 BREAKING NEWS: Asam News par aapka swagat hai! | Local updates ke liye Telegram join karein | Aaj ki badi khabar... </span>
+    </div>
+
     <header>
-        <h1>🎬 RAJDEV MOVIE HUB</h1>
-        <p>Sabse Pehle Latest Movies Yahan Milengi!</p>
-        <a href="https://t.me/+u4cmm3JmIrFlNzZl" class="tg-btn"><i class="fab fa-telegram"></i> JOIN TELEGRAM CHANNEL</a>
+        <h1>ASAM NEWS</h1>
+        <p>Sacchai Aap Tak, Sabse Pehle</p>
     </header>
 
-    <div class="social-bar">
+    <div class="social-nav">
+        <a href="https://t.me/+u4cmm3JmIrFlNzZl" class="tg-link"><i class="fab fa-telegram"></i> JOIN TELEGRAM</a>
         <a href="https://www.instagram.com/itz_dminem_official43?igsh=MTZpNGMwOGwwMWl5dA=="><i class="fab fa-instagram"></i></a>
         <a href="https://www.facebook.com/share/1Dnme182xd/"><i class="fab fa-facebook"></i></a>
     </div>
 
-    <div class="ad-spot">
-        <small>ADVERTISEMENT</small>
-        <p>Apna Ad Yahan Lagayein - Contact Admin</p>
-    </div>
-
-    <div class="gallery" id="movie-list">
+    <div class="container" id="news-feed">
         </div>
 
-    <div class="ad-spot">
-        <small>ADVERTISEMENT</small>
-        <p>Special Offer: 50% OFF on Prime</p>
-    </div>
-
-    <footer>
-        <p>&copy; 2024 Rajdev-site | All Rights Reserved</p>
-    </footer>
-
     <script>
-        // Yahan hum 20 photos automatic generate kar rahe hain
-        const gallery = document.getElementById('movie-list');
-        
-        for(let i=1; i<=20; i++) {
-            const card = document.createElement('div');
-            card.className = 'post-card';
-            card.innerHTML = `
-                <img src="https://picsum.photos/500/300?random=${i}" alt="Movie ${i}">
-                <div class="actions">
-                    <button class="btn-action" onclick="like(this)"><i class="fas fa-heart"></i> Like</button>
-                    <button class="btn-action"><i class="fas fa-comment"></i> Comment</button>
-                    <input type="text" class="comment-box" placeholder="Write a comment...">
-                </div>
-            `;
-            gallery.appendChild(card);
-            
-            // Beech mein Ads dalne ke liye (Example: Har 5 photo ke baad)
-            if(i % 5 == 0) {
-                const ad = document.createElement('div');
-                ad.className = 'ad-spot';
-                ad.innerHTML = '<small>SPONSORED AD</small><br><b>Google Ads ya Link yahan dalein</b>';
-                gallery.appendChild(ad);
-            }
-        }
+        const newsFeed = document.getElementById('news-feed');
+        const newsTitles = [
+            "Badi Khabar: Shehar mein naya bridge taiyar",
+            "Mausam Update: Agle 24 ghante mein barish ki sambhavna",
+            "Sports: Local tournament mein Asam Team ki jeet",
+            "Technology: Naya 5G tower ab aapke area mein",
+            "Health Tips: Thand mein kaise rakhein apna khayal"
+        ];
 
-        // Like Function
-        function like(btn) {
-            btn.classList.toggle('liked');
-            if(btn.classList.contains('liked')) {
-                btn.style.color = '#ff0055';
-            } else {
-                btn.style.color = '#bbb';
+        for(let i=1; i<=20; i++) {
+            const titleIndex = i % newsTitles.length;
+            const card = document.createElement('div');
+            card.className = 'news-card';
+            card.innerHTML = `
+                <img src="https://picsum.photos/600/350?random=${i}" alt="News Image">
+                <div class="news-content">
+                    <h2>${newsTitles[titleIndex]} #${i}</h2>
+                    <p>Asam News ki vishesh report ke mutabik, aaj shehar mein kaafi halchal rahi. Poori khabar janne ke liye niche comment karein aur video dekhein...</p>
+                </div>
+                <div class="meta">
+                    <button class="meta-btn" onclick="this.style.color='red'"><i class="fas fa-heart"></i> Like</button>
+                    <button class="meta-btn"><i class="fas fa-share"></i> Share</button>
+                    <span style="font-size: 12px; color: #999;">${new Date().toLocaleDateString()}</span>
+                </div>
+                <input type="text" class="comment-box" placeholder="Apni raye likhein...">
+            `;
+            newsFeed.appendChild(card);
+
+            // In-feed Ads (हर 4 न्यूज़ के बाद)
+            if(i % 4 == 0) {
+                const ad = document.createElement('div');
+                ad.className = 'news-ad';
+                ad.innerHTML = '<small>SPONSORED AD</small><br>Google Adsense / Adsterra Ad Code Here';
+                newsFeed.appendChild(ad);
             }
         }
     </script>
+
 </body>
 </html>
