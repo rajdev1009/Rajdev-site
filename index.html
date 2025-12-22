@@ -3,68 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asam News | Sabse Tez Sabse Aage</title>
+    <title>Asam News | Professional Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { --main-red: #c62828; --dark-blue: #1a237e; }
-        body { font-family: 'Helvetica', sans-serif; background: #f4f4f4; margin: 0; padding-bottom: 50px; }
-        .top-bar { background: var(--dark-blue); color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 24px; border-bottom: 4px solid var(--main-red); }
-        .ticker-wrap { background: #eee; padding: 5px; overflow: hidden; border-bottom: 1px solid #ddd; }
-        .ticker { display: inline-block; white-space: nowrap; animation: marquee 25s linear infinite; color: var(--main-red); font-weight: bold; }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .container { display: flex; flex-wrap: wrap; max-width: 1200px; margin: 20px auto; gap: 20px; padding: 0 10px; }
-        .news-section { flex: 2; min-width: 300px; }
-        .card { background: white; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; }
-        .card img { width: 100%; height: 250px; object-fit: cover; }
-        .card-body { padding: 15px; }
-        .card-body h2 { margin: 0; color: #333; font-size: 1.5rem; }
-        .sidebar { flex: 1; min-width: 300px; }
-        .ad-box { background: #fffde7; border: 1px dashed #fbc02d; padding: 20px; text-align: center; margin-bottom: 20px; border-radius: 5px; color: #f57f17; font-weight: bold; }
-        @media (max-width: 800px) { .container { flex-direction: column; } }
+        :root {
+            --primary: #d32f2f;
+            --secondary: #1a237e;
+            --accent: #ffeb3b;
+            --white: #ffffff;
+            --bg: #f0f2f5;
+        }
+
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; overflow-x: hidden; }
+
+        /* Header & Ticker */
+        header { background: var(--secondary); color: white; padding: 15px; text-align: center; border-bottom: 5px solid var(--primary); }
+        .ticker-box { background: #000; color: var(--accent); padding: 10px; font-weight: bold; overflow: hidden; position: sticky; top: 0; z-index: 1000; }
+        .ticker-text { display: inline-block; white-space: nowrap; animation: move-ticker 30s linear infinite; }
+        @keyframes move-ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* Main Grid */
+        .main-container { display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; max-width: 1300px; margin: 20px auto; padding: 0 15px; }
+
+        /* News Cards */
+        .news-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 25px; transition: 0.3s; border: 1px solid #ddd; }
+        .news-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+        .news-card img { width: 100%; height: 350px; object-fit: cover; }
+        .news-content { padding: 20px; }
+        .news-content h2 { margin: 0 0 10px; color: #222; font-size: 1.8rem; }
+        
+        /* Highlighted/Animated Button */
+        .btn-premium {
+            background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+            background-size: 400%;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            animation: animate-glow 20s linear infinite;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 15px rgba(255,0,0,0.5);
+        }
+
+        @keyframes animate-glow {
+            0% { background-position: 0%; }
+            100% { background-position: 400%; }
+        }
+
+        /* Sidebar Sidebar */
+        .sidebar { background: white; padding: 20px; border-radius: 12px; height: fit-content; position: sticky; top: 80px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .sidebar-title { border-bottom: 3px solid var(--primary); margin-bottom: 15px; padding-bottom: 5px; }
+
+        .trending-news { list-style: none; padding: 0; }
+        .trending-news li { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 14px; font-weight: 500; }
+
+        @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; } .news-card img { height: 200px; } }
     </style>
 </head>
 <body>
 
-    <div class="top-bar">ASAM NEWS 📰</div>
+    <header>
+        <h1><i class="fas fa-newspaper"></i> ASAM NEWS</h1>
+        <p>Sacchai Ka Aaina - Har Khabar Sabse Pehle</p>
+    </header>
 
-    <div class="ticker-wrap">
-        <div class="ticker">📢 BREAKING: Rajdev-site par aaj se asli ads shuru! | Latest local updates ke liye page ko scroll karein... </div>
-    </div>
-
-    <div class="container">
-        <div class="news-section" id="main-feed">
-            </div>
-
-        <div class="sidebar">
-            <div class="ad-box">
-                <small>SPONSORED AD</small><br>
-                Adsterra Social Bar is Active!
-            </div>
-            <div style="background:white; padding:15px; border-radius:5px;">
-                <h3 style="border-bottom:2px solid var(--main-red);">TRENDING</h3>
-                <p>1. Asam News par naye ads live.</p>
-                <p>2. Mobile coding ki nayi duniya.</p>
-                <a href="https://t.me/+u4cmm3JmIrFlNzZl" style="color:blue; text-decoration:none; font-weight:bold;">Join Telegram</a>
-            </div>
+    <div class="ticker-box">
+        <div class="ticker-text">
+            ⚡ BREAKING: Asam News par aapka swagat hai! | Latest News Updates Rozana | Apni Website ko ab har koi dekhega | Telegram Join Karein: @AsamNewsOfficial ⚡
         </div>
     </div>
 
+    <div class="main-container">
+        <main id="news-feed">
+            </main>
+
+        <aside class="sidebar">
+            <h3 class="sidebar-title">TRENDING 🔥</h3>
+            <ul class="trending-news">
+                <li>📌 Desh ki aaj ki badi khabrein</li>
+                <li>📌 Local election updates</li>
+                <li>📌 Mausam vibhag ki chetavni</li>
+                <li>📌 Khel jagat se taaza samachar</li>
+            </ul>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <p style="font-weight:bold; color:red;">SPECIAL REPORT 👇</p>
+                <a href="https://pl28312947.effectivegatecpm.com/80/9b/11/809b1106bcc077583a525aedbf118d43.js" class="btn-premium">Video Dekhein</a>
+            </div>
+            
+            <p style="font-size: 12px; color: #999; margin-top: 20px;">Ads by Adsterra</p>
+        </aside>
+    </div>
+
     <script>
-        const feed = document.getElementById('main-feed');
-        for(let i=1; i<=10; i++) {
-            feed.innerHTML += `
-                <div class="card">
-                    <img src="https://picsum.photos/800/400?random=${i}" alt="News">
-                    <div class="card-body">
+        // News News content generate karne ki script (Lamba Scroll)
+        const newsFeed = document.getElementById('news-feed');
+        
+        // Ham 20 News Cards bana rahe hain taaki scroll lamba ho
+        for(let i=1; i<=20; i++) {
+            newsFeed.innerHTML += `
+                <article class="news-card">
+                    <img src="https://picsum.photos/800/450?random=${i}" alt="News Image">
+                    <div class="news-content">
                         <h2>Samachar Update #${i}: Asam News Vishesh Report</h2>
-                        <p>Aaj ki sabse badi khabar aapke liye yahan hai. Pura report dekhne ke liye bane rahein...</p>
-                        <button style="background:var(--main-red); color:white; border:none; padding:10px; border-radius:3px; cursor:pointer;">Pura Padhein</button>
+                        <p>Aaj ki sabse badi khabar aapke liye yahan hai. Is report mein hum dekhenge ki shehar mein kya halchal hai aur aage kya hone wala hai. Poori jaankari ke liye niche button par click karein.</p>
+                        <br>
+                        <a href="https://pl28312947.effectivegatecpm.com/80/9b/11/809b1106bcc077583a525aedbf118d43.js" class="btn-premium">Pura Padhein / Video</a>
                     </div>
-                </div>
+                </article>
             `;
         }
-    </script>
 
+        // Smooth Scroll Effect
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+    
     <script type='text/javascript' src='//pl28312947.effectivegatecpm.com/80/9b/11/809b1106bcc077583a525aedbf118d43.js'></script>
-    </body>
+
+</body>
 </html>
