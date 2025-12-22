@@ -7,96 +7,86 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #4f46e5; --bg: #f3f4f6; --telegram: #0088cc; }
+        :root { --primary: #4f46e5; --bg: #f3f4f6; --tg: #0088cc; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        /* Chat Design */
-        .chat-container { width: 100%; max-width: 500px; height: 550px; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
-        .header { background: var(--primary); color: white; padding: 15px; display: flex; align-items: center; gap: 12px; }
-        .header img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid white; }
+        /* Chat Box */
+        .chat-card { width: 100%; max-width: 500px; height: 500px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; margin-bottom: 20px; }
+        .header { background: var(--primary); color: white; padding: 15px; display: flex; align-items: center; gap: 15px; }
+        .header img { width: 40px; height: 40px; border-radius: 50%; background: #fff; }
         
-        /* Links Section */
-        .links-bar { padding: 10px; display: flex; gap: 10px; justify-content: center; background: #f8f9fa; border-bottom: 1px solid #eee; }
-        .link-btn { text-decoration: none; color: white; padding: 8px 15px; border-radius: 20px; font-size: 14px; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
-        .tg-btn { background: var(--telegram); }
-        .news-btn { background: var(--primary); }
-        .link-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        /* Buttons */
+        .links { display: flex; gap: 10px; justify-content: center; padding: 10px; background: #fff; border-bottom: 1px solid #eee; }
+        .btn { text-decoration: none; color: white; padding: 8px 15px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+        .btn-tg { background: var(--tg); }
+        .btn-news { background: var(--primary); }
 
         #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
-        .msg { padding: 10px 16px; border-radius: 12px; font-size: 14px; max-width: 80%; line-height: 1.5; }
-        .bot { background: var(--primary); color: white; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .user { background: #e5e7eb; color: #1f2937; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .msg { padding: 10px 15px; border-radius: 15px; font-size: 14px; max-width: 80%; }
+        .bot { background: var(--primary); color: white; align-self: flex-start; }
+        .user { background: #e2e2e2; color: #333; align-self: flex-end; }
 
-        .input-box { padding: 15px; background: white; border-top: 1px solid #eee; display: flex; gap: 10px; }
-        input { flex: 1; border: 1px solid #ddd; padding: 10px 15px; border-radius: 8px; outline: none; }
-        button { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; }
+        .input-area { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white; }
+        input { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 10px; outline: none; }
+        .send-btn { background: var(--primary); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
 
-        /* Ad Container Style */
-        .ad-container { width: 100%; max-width: 600px; margin: 30px 0; padding: 20px; background: white; border-radius: 12px; text-align: center; border: 2px dashed #ddd; }
+        /* Ads Container */
+        .ad-box { width: 100%; max-width: 500px; margin: 20px 0; background: #fff; border: 2px dashed #ccc; border-radius: 12px; padding: 15px; text-align: center; }
 
-        /* Gallery Design (SINGLE COLUMN LAYOUT) */
-        .gallery-wrap { width: 100%; max-width: 600px; }
-        .grid { display: flex; flex-direction: column; gap: 25px; } /* Flex column for single layout */
-        .card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-        .card img { width: 100%; height: auto; object-fit: cover; display: block; } /* Height auto for full image */
+        /* Gallery - Single Column (Lamba Layout) */
+        .gallery { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 20px; }
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .card img { width: 100%; height: auto; display: block; }
         .card-info { padding: 15px; }
-        .card-id { color: var(--primary); font-weight: bold; font-size: 14px; }
-        .card-text { font-size: 15px; color: #4b5563; margin-top: 8px; line-height: 1.4; }
+        .card-title { color: var(--primary); font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="chat-container">
+    <div class="chat-card">
         <div class="header">
             <img src="{{ avatar }}" alt="Agent">
             <div><strong>{{ name }}</strong></div>
         </div>
-        
-        <div class="links-bar">
-            <a href="{{ telegram_link }}" target="_blank" class="link-btn tg-btn"><i class="fab fa-telegram"></i> Telegram</a>
-            <a href="{{ news_link }}" target="_blank" class="link-btn news-btn"><i class="fas fa-newspaper"></i> News</a>
+        <div class="links">
+            <a href="{{ telegram_link }}" class="btn btn-tg"><i class="fab fa-telegram"></i> Telegram</a>
+            <a href="{{ news_link }}" class="btn btn-news"><i class="fas fa-newspaper"></i> News</a>
         </div>
-
         <div id="chat-box">
             <div class="msg bot">Namaste! Main Raj ka assistant hoon. Bataiye aap kya janna chahte hain?</div>
         </div>
-        <div class="input-box">
-            <input type="text" id="user-input" placeholder="Yahan likhein...">
-            <button onclick="send()"><i class="fas fa-paper-plane"></i></button>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Kuch likhein...">
+            <button class="send-btn" onclick="send()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <div class="ad-container">
-        <p style="color: #999; font-weight: 600;">Advertisement</p>
+    <div class="ad-box">
+        <p style="font-size: 12px; color: #888;">Sponsored Content</p>
         </div>
 
-    <div class="gallery-wrap">
-        <h2 style="text-align: center; color: #1f2937; margin-bottom: 25px;">Media Files</h2>
-        <div class="grid">
-            {% for photo in photos %}
-            <div class="card">
-                <img src="{{ photo.url }}" alt="Media File {{ photo.id }}">
-                <div class="card-info">
-                    <div class="card-id">#{{ photo.id }}</div>
-                    <div class="card-text">{{ photo.text }}</div>
-                </div>
+    <div class="gallery">
+        <h3 style="text-align: center;">Media Files</h3>
+        {% for photo in photos %}
+        <div class="card">
+            <img src="{{ photo.url }}" alt="Photo">
+            <div class="card-info">
+                <span class="card-title">#{{ photo.id }}</span>
+                <p style="margin: 5px 0; font-size: 14px;">{{ photo.text }}</p>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
 
     <script>
         async function send() {
             const input = document.getElementById('user-input');
             const chatBox = document.getElementById('chat-box');
-            if (!input.value) return;
-
+            if(!input.value) return;
             chatBox.innerHTML += `<div class="msg user">${input.value}</div>`;
             const msg = input.value;
             input.value = '';
             chatBox.scrollTop = chatBox.scrollHeight;
-
             try {
                 const res = await fetch('/chat', {
                     method: 'POST',
@@ -105,14 +95,9 @@
                 });
                 const data = await res.json();
                 chatBox.innerHTML += `<div class="msg bot">${data.reply}</div>`;
-            } catch (e) {
-                chatBox.innerHTML += `<div class="msg bot">Connection error.</div>`;
-            }
-            chatBox.scrollTop = chatBox.scrollHeight;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch(e) {}
         }
-        document.getElementById('user-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') send();
-        });
     </script>
 </body>
 </html>
