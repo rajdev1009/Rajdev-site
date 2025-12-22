@@ -6,15 +6,11 @@ from info import PHOTO_GALLERY, BOT_CONFIG
 
 app = Flask(__name__)
 
-# API Key check karne ke liye logic
-api_key = os.environ.get("GEMINI_API_KEY")
-if not api_key:
-    # Agar Koyeb se key nahi mili, toh config.py se le
-    api_key = Config.API_KEY
-
+# API Key setup
+api_key = os.environ.get("GEMINI_API_KEY") or Config.API_KEY
 genai.configure(api_key=api_key)
 
-# Gemini 2.0 Flash use kar rahe hain
+# UPDATE: Ab 2025 ka latest Gemini 2.5 Flash model use ho raha hai
 model = genai.GenerativeModel(
     model_name="gemini-2.5-flash", 
     system_instruction=Config.SYSTEM_INSTRUCTION
@@ -26,6 +22,7 @@ def index():
                            name=BOT_CONFIG["NAME"], 
                            avatar=BOT_CONFIG["AVATAR"],
                            news_link=BOT_CONFIG["NEWS_LINK"],
+                           telegram_link=BOT_CONFIG["TELEGRAM_LINK"],
                            photos=PHOTO_GALLERY)
 
 @app.route('/chat', methods=['POST'])
@@ -33,18 +30,11 @@ def chat():
     try:
         data = request.get_json()
         user_message = data.get("message")
-        
-        if not user_message:
-            return jsonify({"reply": "Aapne kuch likha nahi!"})
-
-        # Naya Chat session shuru karein
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(user_message)
-        
         return jsonify({"reply": response.text})
     except Exception as e:
-        print(f"ERROR: {str(e)}") # Ye error Koyeb logs mein dikhega
-        return jsonify({"reply": "Maaf kijiye, abhi main connection nahi bana pa raha hoon."})
+        return jsonify({"reply": "System Error: " + str(e)})
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8000))
