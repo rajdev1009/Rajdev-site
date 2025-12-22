@@ -3,31 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meri Mobile Website</title>
+    <title>Rajdev Movie Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #f0f2f5; text-align: center; }
-        header { background: #24292e; color: white; padding: 40px 20px; }
-        .container { padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin: 20px auto; }
-        h1 { margin: 10px 0; }
-        p { color: #555; line-height: 1.6; }
-        .btn { display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-top: 15px; }
+        /* Khatarnak Dark Theme */
+        body { background: #080808; color: white; font-family: 'Arial', sans-serif; margin: 0; padding: 0; }
+        
+        /* Header & Telegram Join Area */
+        header { background: linear-gradient(45deg, #0088cc, #004466); padding: 20px; text-align: center; sticky: top; }
+        .tg-btn { background: white; color: #0088cc; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,136,204,0.5); }
+        
+        /* Social Media Icons */
+        .social-bar { background: #1a1a1a; padding: 10px; text-align: center; }
+        .social-bar a { color: white; margin: 0 15px; font-size: 24px; text-decoration: none; transition: 0.3s; }
+        .social-bar .fa-instagram:hover { color: #e1306c; }
+        .social-bar .fa-facebook:hover { color: #1877f2; }
+
+        /* Ads Section */
+        .ad-spot { background: #222; border: 1px dashed #555; margin: 20px auto; padding: 15px; width: 90%; text-align: center; color: #888; border-radius: 8px; }
+
+        /* Photo Gallery Container */
+        .gallery { padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        
+        /* Movie Card Style */
+        .post-card { background: #121212; width: 100%; max-width: 450px; margin-bottom: 30px; border-radius: 12px; overflow: hidden; border: 1px solid #333; }
+        .post-card img { width: 100%; height: auto; display: block; }
+        
+        /* Actions: Like & Comment */
+        .actions { padding: 15px; border-top: 1px solid #222; }
+        .btn-action { background: none; border: none; color: #bbb; font-size: 18px; cursor: pointer; margin-right: 20px; transition: 0.2s; }
+        .btn-action:hover { color: #ff0055; }
+        .btn-action.liked { color: #ff0055; }
+        
+        .comment-box { width: 90%; background: #222; border: 1px solid #444; color: white; padding: 8px; border-radius: 5px; margin-top: 10px; }
+        
+        footer { padding: 40px; text-align: center; color: #555; font-size: 12px; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Namaste! Main Hoon [Aapka Naam]</h1>
-        <p>Ye website maine apne mobile se banayi hai.</p>
+        <h1>🎬 RAJDEV MOVIE HUB</h1>
+        <p>Sabse Pehle Latest Movies Yahan Milengi!</p>
+        <a href="https://t.me/+u4cmm3JmIrFlNzZl" class="tg-btn"><i class="fab fa-telegram"></i> JOIN TELEGRAM CHANNEL</a>
     </header>
 
-    <div class="container">
-        <div class="card">
-            <h2>Mere Baare Mein</h2>
-            <p>Mujhe coding seekhna aur naye projects banana pasand hai. GitHub ke zariye maine aaj apni pehli website live ki hai!</p>
-            <a href="#" class="btn">Mujhse Contact Karein</a>
-        </div>
+    <div class="social-bar">
+        <a href="https://www.instagram.com/itz_dminem_official43?igsh=MTZpNGMwOGwwMWl5dA=="><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/share/1Dnme182xd/"><i class="fab fa-facebook"></i></a>
     </div>
 
+    <div class="ad-spot">
+        <small>ADVERTISEMENT</small>
+        <p>Apna Ad Yahan Lagayein - Contact Admin</p>
+    </div>
+
+    <div class="gallery" id="movie-list">
+        </div>
+
+    <div class="ad-spot">
+        <small>ADVERTISEMENT</small>
+        <p>Special Offer: 50% OFF on Prime</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Rajdev-site | All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // Yahan hum 20 photos automatic generate kar rahe hain
+        const gallery = document.getElementById('movie-list');
+        
+        for(let i=1; i<=20; i++) {
+            const card = document.createElement('div');
+            card.className = 'post-card';
+            card.innerHTML = `
+                <img src="https://picsum.photos/500/300?random=${i}" alt="Movie ${i}">
+                <div class="actions">
+                    <button class="btn-action" onclick="like(this)"><i class="fas fa-heart"></i> Like</button>
+                    <button class="btn-action"><i class="fas fa-comment"></i> Comment</button>
+                    <input type="text" class="comment-box" placeholder="Write a comment...">
+                </div>
+            `;
+            gallery.appendChild(card);
+            
+            // Beech mein Ads dalne ke liye (Example: Har 5 photo ke baad)
+            if(i % 5 == 0) {
+                const ad = document.createElement('div');
+                ad.className = 'ad-spot';
+                ad.innerHTML = '<small>SPONSORED AD</small><br><b>Google Ads ya Link yahan dalein</b>';
+                gallery.appendChild(ad);
+            }
+        }
+
+        // Like Function
+        function like(btn) {
+            btn.classList.toggle('liked');
+            if(btn.classList.contains('liked')) {
+                btn.style.color = '#ff0055';
+            } else {
+                btn.style.color = '#bbb';
+            }
+        }
+    </script>
 </body>
 </html>
