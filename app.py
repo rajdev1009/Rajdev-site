@@ -1,3 +1,4 @@
+# --- app.py ---
 from flask import Flask, render_template, request, jsonify
 import google.generativeai as genai
 import os
@@ -6,11 +7,10 @@ from info import PHOTO_GALLERY, BOT_CONFIG
 
 app = Flask(__name__)
 
-# API Key setup
 api_key = os.environ.get("GEMINI_API_KEY") or Config.API_KEY
 genai.configure(api_key=api_key)
 
-# UPDATE: Ab 2025 ka latest Gemini 2.5 Flash model use ho raha hai
+# 2025 Latest Gemini 2.5 Flash Model
 model = genai.GenerativeModel(
     model_name="gemini-2.5-flash", 
     system_instruction=Config.SYSTEM_INSTRUCTION
@@ -23,6 +23,9 @@ def index():
                            avatar=BOT_CONFIG["AVATAR"],
                            news_link=BOT_CONFIG["NEWS_LINK"],
                            telegram_link=BOT_CONFIG["TELEGRAM_LINK"],
+                           whatsapp_link=BOT_CONFIG["WHATSAPP_LINK"],
+                           facebook_link=BOT_CONFIG["FACEBOOK_LINK"],
+                           instagram_link=BOT_CONFIG["INSTAGRAM_LINK"],
                            photos=PHOTO_GALLERY)
 
 @app.route('/chat', methods=['POST'])
