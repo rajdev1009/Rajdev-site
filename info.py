@@ -37,8 +37,64 @@ Justice must be served, and peace must prevail. 🙏
 #JusticeForDipu #StopMobViolence #HumanityFirst #StandAgainstHate."
     },
     {
-        "url": "https://picsum.photos/id/10/600/400", 
-        "text": "Space News 2025: Aaj naye planet ki khoj mein ek badi kamyabi mili."
+        "url": "https://i.ibb.co/F4jChDcN/1766056906479.png", 
+        "text": "S👋 Hello Everyone, Mera Naam Raj Hai
+
+Maine khud ek modern aur smart website develop ki hai.
+Is website ka main feature hai ek Advanced AI Assistant 🤖
+jo mere personal assistant ki tarah kaam karta hai.
+
+👉 Aap is AI se koi bhi sawal poochh sakte ho —
+Technology, Coding, AI, General Knowledge ya Daily Life se related.
+Yeh AI fast, smart aur accurate answers dene ki kshamta rakhta hai.
+
+━━━━━━━━━━━━━━━━━━━━━━
+🚀 WEBSITE FEATURES
+━━━━━━━━━━━━━━━━━━━━━━
+✔ Regular updates aur new features
+✔ AI, Automation aur Technology related content
+✔ Smart tools aur future-ready systems
+
+Website abhi active development phase mein hai,
+bahut saare naye updates continuously add kiye ja rahe hain.
+
+━━━━━━━━━━━━━━━━━━━━━━
+🧠 TECHNOLOGY USED
+━━━━━━━━━━━━━━━━━━━━━━
+🔹 Python
+Backend automation ke liye Python ka use kiya gaya hai
+jisse system fast, stable aur efficient ban sake.
+
+🔹 CSS
+Website ko attractive aur modern look dene ke liye
+Advanced CSS aur RGB light effects ka use kiya gaya hai 🌈
+
+🔹 HTML
+Saare pages ka clean aur strong structure banane ke liye
+HTML ka proper implementation kiya gaya hai.
+
+━━━━━━━━━━━━━━━━━━━━━━
+🔧 FUTURE UPDATES
+━━━━━━━━━━━━━━━━━━━━━━
+• More powerful AI features
+• Advanced automation tools
+• Better UI / UX experience
+• New smart utilities
+
+Yeh sirf shuruaat hai 🚀
+Aane wale time mein aur bhi powerful updates aayenge.
+
+━━━━━━━━━━━━━━━━━━━━━━
+🌟 FINAL NOTE
+━━━━━━━━━━━━━━━━━━━━━━
+Yeh website meri mehnat, vision aur passion ka result hai.
+Aapka support aur feedback mujhe aur better banata hai ❤️
+
+Website explore karo,
+AI assistant try karo,
+aur future updates ke liye connected raho.
+
+— Raj."
     }
     # Aap yahan aur photos pehle ki tarah add kar sakte hain
 ]
