@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, jsonify, session
-from huggingface_hub import InferenceClient # Hugging Face Library
+from huggingface_hub import InferenceClient
 import os
 from config import Config
 from info import PHOTO_GALLERY, BOT_CONFIG
 
 app = Flask(__name__)
-app.secret_key = "RAJ_SUPER_SECRET_2025"
+app.secret_key = "RAJ_SECRET_KEY_2025"
 
-# Hugging Face Client Setup
+# Hugging Face Client
 client = InferenceClient(api_key=os.environ.get("HF_TOKEN") or Config.HF_TOKEN)
 
 @app.route('/')
@@ -25,15 +25,12 @@ def chat():
         user_message = request.json.get("message")
         if 'history' not in session: session['history'] = []
         
-        # Last 20 messages memory logic
         history = session['history']
         history.append({"role": "user", "content": user_message})
         if len(history) > 20: history = history[-20:]
 
-        # Hugging Face Messages Format
         messages = [{"role": "system", "content": Config.SYSTEM_INSTRUCTION}] + history
 
-        # Hugging Face API Call
         completion = client.chat_completion(
             model=Config.MODEL_ID, 
             messages=messages, 
@@ -41,16 +38,14 @@ def chat():
         )
         
         reply = completion.choices[0].message.content
-        
-        # Assistant ki reply history mein save karein
         history.append({"role": "assistant", "content": reply})
         session['history'] = history
         
         return jsonify({"reply": reply})
     except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({"reply": "Hugging Face System busy hai, thodi der mein try karein."})
+        return jsonify({"reply": "System busy hai, thodi der mein try karein."})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 8000)))
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host='0.0.0.0', port=port)
     
