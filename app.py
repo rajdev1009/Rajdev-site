@@ -7,10 +7,10 @@ from info import PHOTO_GALLERY, BOT_CONFIG
 app = Flask(__name__)
 app.secret_key = "RAJ_DEV_SECURE_2025"
 
-# Client setup with global timeout
+# Global timeout for the client
 client = InferenceClient(
     api_key=os.environ.get("HF_TOKEN") or Config.HF_TOKEN,
-    timeout=120  # Yeh sahi tarika hai timeout set karne ka
+    timeout=120
 )
 
 @app.route('/')
@@ -29,13 +29,11 @@ def chat():
         user_message = request.json.get("message")
         if 'history' not in session: session['history'] = []
         history = session['history']
-        
         history.append({"role": "user", "content": user_message})
         if len(history) > 10: history = history[-10:]
 
         messages = [{"role": "system", "content": Config.SYSTEM_INSTRUCTION}] + history
         
-        # Ab yahan se timeout hata diya hai
         completion = client.chat_completion(
             model=Config.MODEL_ID, 
             messages=messages, 
@@ -45,11 +43,9 @@ def chat():
         reply = completion.choices[0].message.content
         history.append({"role": "assistant", "content": reply})
         session['history'] = history
-        
         return jsonify({"reply": reply})
         
     except Exception as e:
-        print(f"Error: {e}")
         return jsonify({"reply": "System busy hai, please refresh karein."})
 
 if __name__ == '__main__':
