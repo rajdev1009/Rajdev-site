@@ -3,94 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ name }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Dev Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bg: #0a0a0c; --card-bg: #16161d; --text: #ffffff; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
-        
-        @keyframes rgb-glow {
-            0% { box-shadow: 0 0 10px #ff0000; border-color: #ff0000; }
-            33% { box-shadow: 0 0 10px #00ff00; border-color: #00ff00; }
-            66% { box-shadow: 0 0 10px #0000ff; border-color: #0000ff; }
-            100% { box-shadow: 0 0 10px #ff0000; border-color: #ff0000; }
+        :root { --bg: #050505; --card: #111; --primary: #00ff00; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: white; margin: 0; }
+        @keyframes rgb-glow { 
+            0% { box-shadow: 0 0 15px #ff0000; border-color: #ff0000; } 
+            33% { box-shadow: 0 0 15px #00ff00; border-color: #00ff00; } 
+            66% { box-shadow: 0 0 15px #0000ff; border-color: #0000ff; } 
+            100% { box-shadow: 0 0 15px #ff0000; border-color: #ff0000; } 
         }
-
-        .gallery { width: 100%; max-width: 600px; padding: 20px; margin: auto; display: flex; flex-direction: column; gap: 20px; }
-        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid #333; }
-        .card img { width: 100%; height: auto; }
-        .card-text { padding: 15px; font-size: 14px; color: #ccc; }
-
-        .ad-unit { background: #1a1a2e; border: 2px solid #ff0000; border-radius: 12px; padding: 15px; text-align: center; animation: rgb-glow 3s infinite linear; }
-        .ad-btn { background: linear-gradient(90deg, #ff0000, #ff00ff); color: white; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: bold; display: inline-block; }
-
-        #chat-bubble { position: fixed; bottom: 25px; right: 25px; background: #000; color: #fff; padding: 12px 25px; border-radius: 50px; cursor: pointer; z-index: 1000; border: 2px solid #fff; animation: rgb-glow 4s infinite linear; display: flex; align-items: center; gap: 10px; }
-
-        .chat-card { position: fixed; bottom: 95px; right: 25px; width: 330px; height: 450px; background: #111; border-radius: 20px; display: none; flex-direction: column; overflow: hidden; z-index: 1000; border: 2px solid #333; }
-        .header { background: #1a1a1a; padding: 15px; display: flex; align-items: center; justify-content: space-between; }
-        #chat-box { flex: 1; padding: 15px; overflow-y: auto; background: #000; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 10px; border-radius: 10px; font-size: 13px; }
-        .bot { background: #333; color: #fff; align-self: flex-start; }
-        .user { background: #4f46e5; color: #fff; align-self: flex-end; }
-        .input-area { padding: 10px; background: #1a1a1a; display: flex; gap: 5px; }
-        input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 8px; outline: none; }
-        .send-btn { background: #4f46e5; color: #fff; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; }
+        .gallery { max-width: 600px; margin: auto; padding: 20px; }
+        .card { background: var(--card); border-radius: 15px; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
+        .card img { width: 100%; }
+        .ad-unit { border: 2px solid red; border-radius: 10px; padding: 15px; text-align: center; animation: rgb-glow 3s infinite linear; margin-bottom: 20px; }
+        .ad-btn { background: linear-gradient(90deg, #ff0000, #ff00ff); color: white; padding: 10px 20px; text-decoration: none; font-weight: bold; border-radius: 50px; }
+        
+        #chat-bubble { position: fixed; bottom: 20px; right: 20px; background: #000; padding: 10px 20px; border-radius: 50px; cursor: pointer; border: 2px solid #fff; animation: rgb-glow 4s infinite linear; z-index: 1001; }
+        .chat-card { position: fixed; bottom: 85px; right: 20px; width: 320px; height: 480px; background: #000; border-radius: 20px; display: none; flex-direction: column; border: 2px solid #333; z-index: 1000; overflow: hidden; }
+        
+        #avatar-box { text-align: center; padding: 15px; background: #111; }
+        #dev-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; transition: 0.1s; }
+        
+        #chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px; border-radius: 10px; font-size: 13px; max-width: 80%; }
+        .bot { background: #222; align-self: flex-start; }
+        .user { background: #0044ff; align-self: flex-end; }
+        
+        .input-area { padding: 10px; background: #111; display: flex; gap: 5px; }
+        input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 5px; }
+        .send-btn { background: var(--primary); border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="gallery">
-        <h2 style="text-align: center;">RAJ DIGITAL NEWS</h2>
+        <h2 style="text-align: center;">RAJ NEWS NETWORK</h2>
         {% for photo in photos %}
-        <div class="card">
-            <img src="{{ photo.url }}" alt="News">
-            <div class="card-text">{{ photo.text }}</div>
-        </div>
-        <div class="ad-unit">
-            <a href="{{ smart_link }}" target="_blank" class="ad-btn">CLICK TO VIEW CONTENT</a>
-        </div>
+        <div class="card"><img src="{{ photo.url }}"><div style="padding:10px">{{ photo.text }}</div></div>
+        <div class="ad-unit"><a href="{{ smart_link }}" target="_blank" class="ad-btn">DOWNLOAD FULL STORY</a></div>
         {% endfor %}
     </div>
 
-    <div id="chat-bubble" onclick="toggleChat()">
-        <i class="fas fa-robot"></i> <strong>Assistant</strong>
-    </div>
+    <div id="chat-bubble" onclick="toggleChat()"><strong>DEV ASSISTANT</strong></div>
 
     <div class="chat-card" id="chat-window">
-        <div class="header">
-            <strong>Assistant</strong>
-            <i class="fas fa-times" onclick="toggleChat()" style="cursor:pointer"></i>
+        <div id="avatar-box">
+            <img id="dev-img" src="{{ avatar_n }}" alt="Dev">
+            <div style="font-size: 12px; color: var(--primary); margin-top: 5px;">● LIVE</div>
         </div>
-        <div id="chat-box">
-            <div class="msg bot">Namaste! Main Raj ka assistant hoon.</div>
-        </div>
+        <div id="chat-box"></div>
         <div class="input-area">
-            <input type="text" id="user-input" placeholder="Kuch poochiye..." onkeypress="if(event.key==='Enter') send()">
-            <button class="send-btn" onclick="send()"><i class="fas fa-paper-plane"></i></button>
+            <input type="text" id="user-input" placeholder="Dev se kuch poocho..." onkeypress="if(event.key==='Enter') send()">
+            <button class="send-btn" onclick="send()">SEND</button>
         </div>
     </div>
 
     <script>
+        const normalFace = "{{ avatar_n }}";
+        const talkingFace = "{{ avatar_t }}";
+        let talkInterval;
+
         function toggleChat() {
             const win = document.getElementById('chat-window');
             win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
         }
+
+        function startTalking() {
+            const img = document.getElementById('dev-img');
+            talkInterval = setInterval(() => {
+                img.src = (img.src === normalFace) ? talkingFace : normalFace;
+            }, 150);
+        }
+
+        function stopTalking() {
+            clearInterval(talkInterval);
+            document.getElementById('dev-img').src = normalFace;
+        }
+
+        function speak(text) {
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'hi-IN';
+            utter.onstart = startTalking;
+            utter.onend = stopTalking;
+            synth.speak(utter);
+        }
+
         async function send() {
             const input = document.getElementById('user-input');
             const box = document.getElementById('chat-box');
             if(!input.value.trim()) return;
-            const val = input.value;
-            box.innerHTML += `<div class="msg user">${val}</div>`;
+            const msg = input.value;
+            box.innerHTML += `<div class="msg user">${msg}</div>`;
             input.value = '';
             box.scrollTop = box.scrollHeight;
+
             const res = await fetch('/chat', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({message: val})
+                body: JSON.stringify({message: msg})
             });
             const data = await res.json();
             box.innerHTML += `<div class="msg bot">${data.reply}</div>`;
             box.scrollTop = box.scrollHeight;
+            speak(data.reply);
         }
     </script>
 </body>
