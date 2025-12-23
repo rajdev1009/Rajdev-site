@@ -17,7 +17,8 @@ def index():
                            avatar_n=BOT_CONFIG["AVATAR_NORMAL"],
                            avatar_t=BOT_CONFIG["AVATAR_TALKING"],
                            photos=PHOTO_GALLERY,
-                           smart_link=BOT_CONFIG["SMARTLINK_URL"])
+                           smart_link=BOT_CONFIG["SMARTLINK_URL"],
+                           config_links=BOT_CONFIG) # <--- Yeh line error theek karegi
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -35,7 +36,8 @@ def chat():
         history.append({"role": "assistant", "content": reply})
         session['history'] = history
         return jsonify({"reply": reply})
-    except:
+    except Exception as e:
+        print(f"Error: {e}")
         return jsonify({"reply": "System busy hai."})
 
 if __name__ == '__main__':
