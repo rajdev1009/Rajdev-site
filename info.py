@@ -12,7 +12,7 @@ BOT_CONFIG = {
 
     # --- AVATAR PHOTOS (Lip-Sync ke liye) ---
     # Munh band wali photo (Normal)
-    "AVATAR_NORMAL": "https://i.ibb.co/bMDGJ9KK/1766492848052-2.jpg", 
+    "AVATAR_NORMAL": "https://i.ibb.co/kY1Nyzs/1765464889401-2.jpg", 
     # Munh khula wali photo (Talking) - Iska link bhi yahan paste karein
     "AVATAR_TALKING": "https://i.ibb.co/bMDGJ9KK/1766492848052-2.jpg", 
 
