@@ -3,113 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Assistant</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Dev Live Assistant</title>
     <style>
-        :root { --bg: #050505; --card: #111; --primary: #00ff00; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: white; margin: 0; }
-        @keyframes rgb-glow { 
-            0% { box-shadow: 0 0 15px #ff0000; border-color: #ff0000; } 
-            33% { box-shadow: 0 0 15px #00ff00; border-color: #00ff00; } 
-            66% { box-shadow: 0 0 15px #0000ff; border-color: #0000ff; } 
-            100% { box-shadow: 0 0 15px #ff0000; border-color: #ff0000; } 
+        /* RGB Glow and Layout */
+        body { background: #000; color: white; font-family: sans-serif; margin: 0; text-align: center; }
+        #avatar-container { 
+            width: 300px; height: 300px; margin: 20px auto; 
+            border-radius: 50%; overflow: hidden; 
+            border: 4px solid #0f0; box-shadow: 0 0 20px #0f0;
+            background: #111; position: relative;
         }
-        .gallery { max-width: 600px; margin: auto; padding: 20px; }
-        .card { background: var(--card); border-radius: 15px; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
-        .card img { width: 100%; }
-        .ad-unit { border: 2px solid red; border-radius: 10px; padding: 15px; text-align: center; animation: rgb-glow 3s infinite linear; margin-bottom: 20px; }
-        .ad-btn { background: linear-gradient(90deg, #ff0000, #ff00ff); color: white; padding: 10px 20px; text-decoration: none; font-weight: bold; border-radius: 50px; }
+        #live-canvas { width: 100%; height: 100%; object-fit: cover; }
         
-        #chat-bubble { position: fixed; bottom: 20px; right: 20px; background: #000; padding: 10px 20px; border-radius: 50px; cursor: pointer; border: 2px solid #fff; animation: rgb-glow 4s infinite linear; z-index: 1001; }
-        .chat-card { position: fixed; bottom: 85px; right: 20px; width: 320px; height: 480px; background: #000; border-radius: 20px; display: none; flex-direction: column; border: 2px solid #333; z-index: 1000; overflow: hidden; }
-        
-        #avatar-box { text-align: center; padding: 15px; background: #111; }
-        #dev-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; transition: 0.1s; }
-        
-        #chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 10px; border-radius: 10px; font-size: 13px; max-width: 80%; }
-        .bot { background: #222; align-self: flex-start; }
-        .user { background: #0044ff; align-self: flex-end; }
-        
-        .input-area { padding: 10px; background: #111; display: flex; gap: 5px; }
-        input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 5px; }
-        .send-btn { background: var(--primary); border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; }
+        .chat-box { width: 90%; max-width: 400px; margin: auto; background: #111; border-radius: 15px; padding: 15px; border: 1px solid #333; }
+        #messages { height: 200px; overflow-y: auto; text-align: left; font-size: 14px; margin-bottom: 10px; }
+        input { width: 70%; padding: 10px; border-radius: 5px; border: none; }
+        button { padding: 10px; background: #0f0; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="gallery">
-        <h2 style="text-align: center;">RAJ NEWS NETWORK</h2>
-        {% for photo in photos %}
-        <div class="card"><img src="{{ photo.url }}"><div style="padding:10px">{{ photo.text }}</div></div>
-        <div class="ad-unit"><a href="{{ smart_link }}" target="_blank" class="ad-btn">DOWNLOAD FULL STORY</a></div>
-        {% endfor %}
+
+    <h2>DEV LIVE AI ASSISTANT</h2>
+
+    <div id="avatar-container">
+        <canvas id="live-canvas"></canvas>
     </div>
 
-    <div id="chat-bubble" onclick="toggleChat()"><strong>DEV ASSISTANT</strong></div>
-
-    <div class="chat-card" id="chat-window">
-        <div id="avatar-box">
-            <img id="dev-img" src="{{ avatar_n }}" alt="Dev">
-            <div style="font-size: 12px; color: var(--primary); margin-top: 5px;">● LIVE</div>
-        </div>
-        <div id="chat-box"></div>
-        <div class="input-area">
-            <input type="text" id="user-input" placeholder="Dev se kuch poocho..." onkeypress="if(event.key==='Enter') send()">
-            <button class="send-btn" onclick="send()">SEND</button>
-        </div>
+    <div class="chat-box">
+        <div id="messages"></div>
+        <input type="text" id="user-input" placeholder="Dev se baat karein...">
+        <button onclick="sendMsg()">SEND</button>
     </div>
 
-    <script>
-        const normalFace = "{{ avatar_n }}";
-        const talkingFace = "{{ avatar_t }}";
-        let talkInterval;
+    <script src="https://unpkg.com/talkinghead@1.1.0/dist/talkinghead.mjs" type="module"></script>
 
-        function toggleChat() {
-            const win = document.getElementById('chat-window');
-            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+    <script type="module">
+        import { TalkingHead } from "https://unpkg.com/talkinghead@1.1.0/dist/talkinghead.mjs";
+
+        let head;
+        const node = document.getElementById('avatar-container');
+
+        // Avatar Initializing (3D Model / Photo animation)
+        async function initAvatar() {
+            head = new TalkingHead(node, {
+                model: "https://models.readyplayer.me/64b52994963595603a1104e1.glb", // Ye ek 3D model hai, aap ise apni photo se replace kar sakte hain later
+                cameraView: "head"
+            });
+            await head.init();
         }
 
-        function startTalking() {
-            const img = document.getElementById('dev-img');
-            talkInterval = setInterval(() => {
-                img.src = (img.src === normalFace) ? talkingFace : normalFace;
-            }, 150);
-        }
-
-        function stopTalking() {
-            clearInterval(talkInterval);
-            document.getElementById('dev-img').src = normalFace;
-        }
-
-        function speak(text) {
-            const synth = window.speechSynthesis;
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'hi-IN';
-            utter.onstart = startTalking;
-            utter.onend = stopTalking;
-            synth.speak(utter);
-        }
-
-        async function send() {
+        window.sendMsg = async () => {
             const input = document.getElementById('user-input');
-            const box = document.getElementById('chat-box');
-            if(!input.value.trim()) return;
             const msg = input.value;
-            box.innerHTML += `<div class="msg user">${msg}</div>`;
-            input.value = '';
-            box.scrollTop = box.scrollHeight;
+            if(!msg) return;
 
+            // Display message
+            document.getElementById('messages').innerHTML += `<div><b>You:</b> ${msg}</div>`;
+            input.value = "";
+
+            // Fetch Reply from your Flask App
             const res = await fetch('/chat', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({message: msg})
             });
             const data = await res.json();
-            box.innerHTML += `<div class="msg bot">${data.reply}</div>`;
-            box.scrollTop = box.scrollHeight;
-            speak(data.reply);
-        }
+
+            // Display Reply
+            document.getElementById('messages').innerHTML += `<div><b>Dev:</b> ${data.reply}</div>`;
+
+            // LIVE AVATAR SPEECH (Munh hilana aur Bolna)
+            // Ye library apne aap lip-sync karegi
+            head.speakText(data.reply); 
+        };
+
+        initAvatar();
     </script>
 </body>
 </html>
