@@ -17,20 +17,28 @@
             100% { box-shadow: 0 0 15px #ff0000; border-color: #ff0000; }
         }
 
-        .gallery { max-width: 600px; margin: auto; padding: 20px; padding-bottom: 100px; }
+        /* Gallery Section */
+        .gallery { max-width: 600px; margin: auto; padding: 20px; padding-bottom: 120px; }
         .card { background: #111; border-radius: 15px; overflow: hidden; margin-bottom: 25px; border: 1px solid #333; }
         .card img { width: 100%; display: block; }
         .card-text { padding: 15px; font-size: 14px; color: #ccc; }
         
+        /* Ad Units */
         .ad-unit { border: 2px solid red; border-radius: 12px; padding: 15px; text-align: center; animation: rgb-glow 3s infinite linear; margin-bottom: 25px; }
         .ad-btn { background: linear-gradient(90deg, #ff0000, #ff00ff); color: white; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; display: inline-block; }
 
+        /* Social Icons Header */
+        .social-header { display: flex; justify-content: center; gap: 20px; padding: 20px; background: #111; border-bottom: 1px solid #333; }
+        .social-header a { color: white; font-size: 24px; text-decoration: none; transition: 0.3s; }
+        .social-header a:hover { color: var(--primary); transform: scale(1.2); }
+
+        /* Floating Chat Bubble */
         #chat-bubble { position: fixed; bottom: 25px; right: 25px; background: #000; border: 2px solid #fff; padding: 12px 20px; border-radius: 50px; cursor: pointer; animation: rgb-glow 4s infinite linear; z-index: 1001; display: flex; align-items: center; gap: 10px; }
 
+        /* AI Chat Window */
         .chat-card { position: fixed; bottom: 90px; right: 25px; width: 320px; height: 480px; background: #000; border-radius: 20px; display: none; flex-direction: column; border: 2px solid #333; z-index: 1000; overflow: hidden; }
-        
         #avatar-header { background: #111; padding: 15px; text-align: center; border-bottom: 1px solid #333; }
-        #dev-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; transition: transform 0.1s; }
+        #dev-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; }
 
         #chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #050505; }
         .msg { padding: 10px 14px; border-radius: 15px; font-size: 13px; max-width: 80%; }
@@ -44,10 +52,20 @@
 </head>
 <body>
 
+    <div class="social-header">
+        <a href="{{ config_links.FACEBOOK_LINK }}" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="{{ config_links.INSTAGRAM_LINK }}" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="{{ config_links.TELEGRAM_LINK }}" target="_blank"><i class="fab fa-telegram"></i></a>
+        <a href="{{ config_links.WHATSAPP_LINK }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
     <div class="gallery">
-        <h2 style="text-align: center; color: var(--primary);">RAJ DIGITAL NEWS</h2>
+        <h2 style="text-align: center; color: var(--primary); margin-bottom: 30px;">RAJ DIGITAL NEWS</h2>
         {% for photo in photos %}
-        <div class="card"><img src="{{ photo.url }}"><div class="card-text">{{ photo.text }}</div></div>
+        <div class="card">
+            <img src="{{ photo.url }}">
+            <div class="card-text">{{ photo.text }}</div>
+        </div>
         <div class="ad-unit">
             <a href="{{ smart_link }}" target="_blank" class="ad-btn">CLICK TO VIEW CONTENT</a>
         </div>
@@ -68,7 +86,7 @@
         </div>
         <div class="input-area">
             <input type="text" id="user-input" placeholder="Dev se poocho..." onkeypress="if(event.key==='Enter') send()">
-            <button class="send-btn" onclick="send()"><i class="fas fa-paper-plane"></i></button>
+            <button class="send-btn" onclick="send()">SEND</button>
         </div>
     </div>
 
@@ -100,15 +118,15 @@
         function speak(text) {
             const synth = window.speechSynthesis;
             const utter = new SpeechSynthesisUtterance(text);
-            
-            // Male Voice Logic
             const voices = synth.getVoices();
-            const maleVoice = voices.find(v => v.lang.includes('hi') && (v.name.includes('Male') || v.name.includes('Google')));
+            
+            // Strong Male Voice Logic
+            let maleVoice = voices.find(v => v.lang.includes('hi') && (v.name.includes('Male') || v.name.includes('Hemant') || v.name.includes('Google')));
             if(maleVoice) utter.voice = maleVoice;
 
             utter.lang = 'hi-IN';
-            utter.pitch = 0.8; // Deep Male Voice
-            utter.rate = 1.0;
+            utter.pitch = 0.5; // Deep Male Sound
+            utter.rate = 0.85; // Professional Speed
 
             utter.onstart = startTalking;
             utter.onend = stopTalking;
@@ -136,11 +154,10 @@
                 box.scrollTop = box.scrollHeight;
                 speak(data.reply);
             } catch (e) {
-                console.error("Fetch error");
+                console.error("Connection error");
             }
         }
         
-        // Load voices
         window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
     </script>
 </body>
