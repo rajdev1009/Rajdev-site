@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raj News - Dev Assistant</title>
+    <link rel="icon" href="data:,">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -17,7 +18,6 @@
             100% { box-shadow: 0 0 15px #ff0000; border-color: #ff0000; }
         }
 
-        /* Smooth Pulse Animation (No Shaking) */
         @keyframes talk-pulse {
             0% { transform: scale(1); filter: brightness(1); }
             50% { transform: scale(1.06); filter: brightness(1.3); }
@@ -41,8 +41,6 @@
 
         .chat-card { position: fixed; bottom: 90px; right: 25px; width: 320px; height: 480px; background: #000; border-radius: 20px; display: none; flex-direction: column; border: 2px solid #333; z-index: 1000; overflow: hidden; }
         #avatar-header { background: #111; padding: 15px; text-align: center; border-bottom: 1px solid #333; }
-        
-        /* Container to keep layout stable */
         .avatar-container { width: 100px; height: 100px; margin: auto; position: relative; }
         #dev-img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; }
 
@@ -89,7 +87,7 @@
         </div>
         <div class="input-area">
             <input type="text" id="user-input" placeholder="Yahan likhein..." onkeypress="if(event.key==='Enter') send()">
-            <button class="send-btn" onclick="send()"><i class="fas fa-paper-plane"></i></button>
+            <button class="send-btn" onclick="send()">SEND</button>
         </div>
     </div>
 
@@ -101,19 +99,17 @@
 
         function speak(text) {
             const synth = window.speechSynthesis;
-            synth.cancel(); // Stop any current speech
-            
+            synth.cancel();
             const utter = new SpeechSynthesisUtterance(text);
             const voices = synth.getVoices();
             const img = document.getElementById('dev-img');
 
-            // Find Best Male Voice
             let maleVoice = voices.find(v => v.lang.includes('hi') && (v.name.includes('Male') || v.name.includes('Hemant') || v.name.includes('Google')));
             if(maleVoice) utter.voice = maleVoice;
 
             utter.lang = 'hi-IN';
             utter.pitch = 0.4; // Strong Deep Male Voice
-            utter.rate = 0.85; // Natural Speed
+            utter.rate = 0.8; 
 
             utter.onstart = () => { img.classList.add('talking-active'); };
             utter.onend = () => { img.classList.remove('talking-active'); };
@@ -145,7 +141,6 @@
                 console.error("Fetch failed");
             }
         }
-        
         window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
     </script>
 </body>
