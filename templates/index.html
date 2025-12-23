@@ -9,67 +9,117 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #4f46e5; --bg: #f3f4f6; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
-        .chat-card { width: 100%; max-width: 500px; height: 500px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; margin-bottom: 20px; }
-        .header { background: var(--primary); color: white; padding: 15px; display: flex; align-items: center; gap: 15px; }
-        .header img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid white; }
-        #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
+        
+        /* News Gallery Styling */
+        .gallery { width: 100%; max-width: 600px; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .card img { width: 100%; height: auto; display: block; }
+        .card-text { padding: 15px; font-size: 15px; line-height: 1.5; color: #333; }
+        .ad-unit { background: #fff; border: 1px dashed #bbb; border-radius: 10px; padding: 12px; text-align: center; margin-top: -10px; }
+        .ad-link { font-size: 14px; color: var(--primary); text-decoration: none; font-weight: bold; }
+
+        /* Floating Bubble (Assistant Button) */
+        #chat-bubble {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--primary); color: white;
+            padding: 12px 20px; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex; align-items: center; gap: 10px; z-index: 1000;
+            transition: transform 0.3s;
+        }
+        #chat-bubble:hover { transform: scale(1.05); }
+
+        /* Hidden Chat Card */
+        .chat-card {
+            position: fixed; bottom: 85px; right: 20px;
+            width: 350px; height: 500px;
+            background: white; border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: none; flex-direction: column;
+            overflow: hidden; z-index: 1000;
+        }
+        
+        .header { background: var(--primary); color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .header-info { display: flex; align-items: center; gap: 10px; }
+        .header img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid white; }
+        
+        #chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
         .msg { padding: 10px 15px; border-radius: 15px; font-size: 14px; max-width: 85%; }
         .bot { background: var(--primary); color: white; align-self: flex-start; }
         .user { background: #e2e2e2; color: #333; align-self: flex-end; }
-        .input-area { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white; }
-        input { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 10px; outline: none; }
-        .send-btn { background: var(--primary); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
         
-        /* Gallery & Ads */
-        .gallery { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; }
-        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .card img { width: 100%; height: auto; display: block; }
-        .ad-unit { width: 100%; background: #fff; border: 1px dashed #bbb; border-radius: 10px; padding: 12px; text-align: center; margin-top: -10px; }
-        .ad-link { font-size: 14px; color: var(--primary); text-decoration: none; font-weight: bold; }
+        .input-area { padding: 10px; border-top: 1px solid #eee; display: flex; gap: 10px; background: white; }
+        input { flex: 1; border: 1px solid #ddd; padding: 8px; border-radius: 10px; outline: none; }
+        .send-btn { background: var(--primary); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="chat-card">
-        <div class="header">
-            <img src="{{ avatar }}" alt="Agent">
-            <div><strong>{{ name }}</strong></div>
-        </div>
-        <div id="chat-box">
-            <div class="msg bot">Namaste! Main Raj ka assistant hoon. Bataiye aap kya janna chahte hain?</div>
-        </div>
-        <div class="input-area">
-            <input type="text" id="user-input" placeholder="Kuch poochiye...">
-            <button class="send-btn" onclick="send()"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
     <div class="gallery">
+        <h2 style="text-align: center; color: var(--primary);">Global News Update 2025</h2>
         {% for photo in photos %}
         <div class="card">
-            <img src="{{ photo.url }}" alt="Media">
-            <div style="padding: 10px; font-size: 14px;">{{ photo.text }}</div>
+            <img src="{{ photo.url }}" alt="News Photo">
+            <div class="card-text">{{ photo.text }}</div>
         </div>
-
         <div class="ad-unit">
-            <p style="font-size: 10px; color: #999; margin-bottom: 5px;">SPONSORED</p>
             <a href="{{ smart_link }}" target="_blank" class="ad-link">
-                <i class="fas fa-external-link-alt"></i> Click to Open Media File
+                <i class="fas fa-external-link-alt"></i> Click to Open Full Report
             </a>
         </div>
         {% endfor %}
     </div>
 
+    <div id="chat-bubble" onclick="toggleChat()">
+        <i class="fas fa-robot"></i>
+        <strong>Assistant</strong>
+    </div>
+
+    <div class="chat-card" id="chat-window">
+        <div class="header">
+            <div class="header-info">
+                <img src="{{ avatar }}" alt="Agent">
+                <strong>{{ name }}</strong>
+            </div>
+            <i class="fas fa-times" style="cursor: pointer;" onclick="toggleChat()"></i>
+        </div>
+        <div id="chat-box">
+            <div class="msg bot">Namaste! Main Raj ka assistant hoon. Bataiye aap kya janna chahte hain?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Kuch poochiye..." onkeypress="handleKey(event)">
+            <button class="send-btn" onclick="send()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
     <script>
+        // Chat window dikhane aur chhupane ke liye
+        function toggleChat() {
+            const chatWin = document.getElementById('chat-window');
+            if (chatWin.style.display === 'flex') {
+                chatWin.style.display = 'none';
+            } else {
+                chatWin.style.display = 'flex';
+                document.getElementById('user-input').focus();
+            }
+        }
+
+        // Enter key se message bhejne ke liye
+        function handleKey(e) {
+            if (e.key === 'Enter') send();
+        }
+
         async function send() {
             const input = document.getElementById('user-input');
             const chatBox = document.getElementById('chat-box');
             if(!input.value.trim()) return;
-            chatBox.innerHTML += `<div class="msg user">${input.value}</div>`;
+
             const msg = input.value;
+            chatBox.innerHTML += `<div class="msg user">${msg}</div>`;
             input.value = '';
             chatBox.scrollTop = chatBox.scrollHeight;
+
             try {
                 const res = await fetch('/chat', {
                     method: 'POST',
@@ -79,7 +129,9 @@
                 const data = await res.json();
                 chatBox.innerHTML += `<div class="msg bot">${data.reply}</div>`;
                 chatBox.scrollTop = chatBox.scrollHeight;
-            } catch(e) {}
+            } catch(e) {
+                chatBox.innerHTML += `<div class="msg bot">Sorry, main abhi kaam nahi kar raha hoon.</div>`;
+            }
         }
     </script>
 </body>
