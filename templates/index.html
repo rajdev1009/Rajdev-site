@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raj News - Dev AI</title>
+    <title>Raj News - Dev Assistant</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --bg: #050505; --primary: #00ff00; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: white; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: white; margin: 0; padding: 0; overflow-x: hidden; }
         
         @keyframes rgb-glow {
             0% { box-shadow: 0 0 15px #ff0000; border-color: #ff0000; }
@@ -17,16 +17,17 @@
             100% { box-shadow: 0 0 15px #ff0000; border-color: #ff0000; }
         }
 
-        /* Smooth Talking Animation (No Layout Shake) */
+        /* Smooth Pulse Animation (No Shaking) */
         @keyframes talk-pulse {
             0% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.05); filter: brightness(1.3); }
+            50% { transform: scale(1.06); filter: brightness(1.3); }
             100% { transform: scale(1); filter: brightness(1); }
         }
         .talking-active { animation: talk-pulse 0.4s infinite ease-in-out; }
 
         .social-header { display: flex; justify-content: center; gap: 20px; padding: 20px; background: #111; border-bottom: 1px solid #333; }
         .social-header a { color: white; font-size: 24px; text-decoration: none; transition: 0.3s; }
+        .social-header a:hover { color: var(--primary); transform: scale(1.2); }
 
         .gallery { max-width: 600px; margin: auto; padding: 20px; padding-bottom: 120px; }
         .card { background: #111; border-radius: 15px; overflow: hidden; margin-bottom: 25px; border: 1px solid #333; }
@@ -41,8 +42,8 @@
         .chat-card { position: fixed; bottom: 90px; right: 25px; width: 320px; height: 480px; background: #000; border-radius: 20px; display: none; flex-direction: column; border: 2px solid #333; z-index: 1000; overflow: hidden; }
         #avatar-header { background: #111; padding: 15px; text-align: center; border-bottom: 1px solid #333; }
         
-        /* Fixed Container for Avatar to prevent shaking */
-        .img-container { width: 100px; height: 100px; margin: auto; position: relative; }
+        /* Container to keep layout stable */
+        .avatar-container { width: 100px; height: 100px; margin: auto; position: relative; }
         #dev-img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; }
 
         #chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #050505; }
@@ -65,10 +66,10 @@
     </div>
 
     <div class="gallery">
-        <h2 style="text-align: center; color: var(--primary);">RAJ DIGITAL NEWS</h2>
+        <h2 style="text-align: center; color: var(--primary); margin-bottom:30px;">RAJ NEWS NETWORK</h2>
         {% for photo in photos %}
         <div class="card"><img src="{{ photo.url }}"><div class="card-text">{{ photo.text }}</div></div>
-        <div class="ad-unit"><a href="{{ smart_link }}" target="_blank" class="ad-btn">CLICK TO VIEW</a></div>
+        <div class="ad-unit"><a href="{{ smart_link }}" target="_blank" class="ad-btn">CLICK TO DOWNLOAD</a></div>
         {% endfor %}
     </div>
 
@@ -78,17 +79,17 @@
 
     <div class="chat-card" id="chat-window">
         <div id="avatar-header">
-            <div class="img-container">
+            <div class="avatar-container">
                 <img id="dev-img" src="{{ avatar_n }}" alt="Dev">
             </div>
             <div style="font-size: 11px; color: var(--primary); margin-top: 5px;">● DEV MALE LIVE</div>
         </div>
         <div id="chat-box">
-            <div class="msg bot">Namaste! Main Dev hoon.</div>
+            <div class="msg bot">Namaste! Main Dev hoon. Raj ka assistant.</div>
         </div>
         <div class="input-area">
-            <input type="text" id="user-input" placeholder="Poochiye..." onkeypress="if(event.key==='Enter') send()">
-            <button class="send-btn" onclick="send()">SEND</button>
+            <input type="text" id="user-input" placeholder="Yahan likhein..." onkeypress="if(event.key==='Enter') send()">
+            <button class="send-btn" onclick="send()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
@@ -100,19 +101,21 @@
 
         function speak(text) {
             const synth = window.speechSynthesis;
+            synth.cancel(); // Stop any current speech
+            
             const utter = new SpeechSynthesisUtterance(text);
             const voices = synth.getVoices();
             const img = document.getElementById('dev-img');
 
-            let maleVoice = voices.find(v => v.lang.includes('hi') && (v.name.includes('Male') || v.name.includes('Hemant')));
+            // Find Best Male Voice
+            let maleVoice = voices.find(v => v.lang.includes('hi') && (v.name.includes('Male') || v.name.includes('Hemant') || v.name.includes('Google')));
             if(maleVoice) utter.voice = maleVoice;
 
-            utter.pitch = 0.5;
-            utter.rate = 0.85;
+            utter.lang = 'hi-IN';
+            utter.pitch = 0.4; // Strong Deep Male Voice
+            utter.rate = 0.85; // Natural Speed
 
-            // Start Animation
             utter.onstart = () => { img.classList.add('talking-active'); };
-            // Stop Animation
             utter.onend = () => { img.classList.remove('talking-active'); };
 
             synth.speak(utter);
@@ -128,16 +131,21 @@
             input.value = '';
             box.scrollTop = box.scrollHeight;
 
-            const res = await fetch('/chat', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({message: msg})
-            });
-            const data = await res.json();
-            box.innerHTML += `<div class="msg bot">${data.reply}</div>`;
-            box.scrollTop = box.scrollHeight;
-            speak(data.reply);
+            try {
+                const res = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: msg})
+                });
+                const data = await res.json();
+                box.innerHTML += `<div class="msg bot">${data.reply}</div>`;
+                box.scrollTop = box.scrollHeight;
+                speak(data.reply);
+            } catch (e) {
+                console.error("Fetch failed");
+            }
         }
+        
         window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
     </script>
 </body>
