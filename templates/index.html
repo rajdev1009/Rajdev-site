@@ -3,81 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Live Assistant</title>
+    <title>Dev - Live AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* RGB Glow and Layout */
-        body { background: #000; color: white; font-family: sans-serif; margin: 0; text-align: center; }
-        #avatar-container { 
-            width: 300px; height: 300px; margin: 20px auto; 
-            border-radius: 50%; overflow: hidden; 
-            border: 4px solid #0f0; box-shadow: 0 0 20px #0f0;
-            background: #111; position: relative;
-        }
-        #live-canvas { width: 100%; height: 100%; object-fit: cover; }
+        body { background: #000; color: #fff; font-family: 'Poppins', sans-serif; margin: 0; overflow-x: hidden; }
         
-        .chat-box { width: 90%; max-width: 400px; margin: auto; background: #111; border-radius: 15px; padding: 15px; border: 1px solid #333; }
-        #messages { height: 200px; overflow-y: auto; text-align: left; font-size: 14px; margin-bottom: 10px; }
-        input { width: 70%; padding: 10px; border-radius: 5px; border: none; }
-        button { padding: 10px; background: #0f0; border: none; cursor: pointer; font-weight: bold; }
+        /* RGB Glow Container */
+        .avatar-box {
+            width: 200px; height: 200px; margin: 30px auto;
+            border-radius: 50%; position: relative;
+            border: 4px solid #ff0000;
+            animation: rgb-glow 5s infinite linear;
+            overflow: hidden; background: #111;
+        }
+
+        @keyframes rgb-glow {
+            0% { border-color: #ff0000; box-shadow: 0 0 20px #ff0000; }
+            33% { border-color: #00ff00; box-shadow: 0 0 20px #00ff00; }
+            66% { border-color: #0000ff; box-shadow: 0 0 20px #0000ff; }
+            100% { border-color: #ff0000; box-shadow: 0 0 20px #ff0000; }
+        }
+
+        #avatar-video { width: 100%; height: 100%; object-fit: cover; display: none; }
+        #avatar-static { width: 100%; height: 100%; object-fit: cover; }
+
+        .chat-container { max-width: 400px; margin: auto; padding: 20px; background: #111; border-radius: 20px; border: 1px solid #333; }
+        #chat-box { height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 10px; }
+        .msg { padding: 10px; border-radius: 12px; font-size: 14px; max-width: 80%; }
+        .user { background: #007bff; align-self: flex-end; }
+        .bot { background: #333; align-self: flex-start; }
+
+        .input-area { display: flex; gap: 10px; margin-top: 15px; }
+        input { flex: 1; padding: 12px; border-radius: 30px; border: 1px solid #444; background: #000; color: #fff; outline: none; }
+        button { background: #00ff00; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h2>DEV LIVE AI ASSISTANT</h2>
+    <h3 style="text-align:center; color:#00ff00; margin-top:20px;">DEV LIVE AI SYSTEM</h3>
 
-    <div id="avatar-container">
-        <canvas id="live-canvas"></canvas>
+    <div class="avatar-box">
+        <img id="avatar-static" src="{{ avatar_n }}" alt="Dev">
+        <canvas id="talking-canvas" style="display:none; position:absolute; top:0; left:0;"></canvas>
     </div>
 
-    <div class="chat-box">
-        <div id="messages"></div>
-        <input type="text" id="user-input" placeholder="Dev se baat karein...">
-        <button onclick="sendMsg()">SEND</button>
+    <div class="chat-container">
+        <div id="chat-box">
+            <div class="msg bot">Namaste! Main Dev hoon, Raj ka assistant. Main Lumding mein rehta hoon. Bataiye main aapki kya madad kar sakta hoon?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Yahan likhein..." onkeypress="if(event.key==='Enter') send()">
+            <button onclick="send()"><i class="fas fa-paper-plane"></i></button>
+        </div>
     </div>
 
-    <script src="https://unpkg.com/talkinghead@1.1.0/dist/talkinghead.mjs" type="module"></script>
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+        const avatarStatic = document.getElementById('avatar-static');
+        
+        // Browser TTS Setup
+        const synth = window.speechSynthesis;
 
-    <script type="module">
-        import { TalkingHead } from "https://unpkg.com/talkinghead@1.1.0/dist/talkinghead.mjs";
-
-        let head;
-        const node = document.getElementById('avatar-container');
-
-        // Avatar Initializing (3D Model / Photo animation)
-        async function initAvatar() {
-            head = new TalkingHead(node, {
-                model: "https://models.readyplayer.me/64b52994963595603a1104e1.glb", // Ye ek 3D model hai, aap ise apni photo se replace kar sakte hain later
-                cameraView: "head"
-            });
-            await head.init();
+        function speak(text) {
+            if (synth.speaking) synth.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'hi-IN';
+            utter.rate = 1.0;
+            
+            // Animation Trigger
+            utter.onstart = () => { avatarStatic.style.filter = "brightness(1.2) contrast(1.1)"; startPulse(); };
+            utter.onend = () => { avatarStatic.style.filter = "brightness(1)"; stopPulse(); };
+            
+            synth.speak(utter);
         }
 
-        window.sendMsg = async () => {
-            const input = document.getElementById('user-input');
-            const msg = input.value;
-            if(!msg) return;
+        let pulseInterval;
+        function startPulse() {
+            // Smooth "Talking" effect using CSS transform and brightness
+            pulseInterval = setInterval(() => {
+                avatarStatic.style.transform = (avatarStatic.style.transform === 'scale(1.05)') ? 'scale(1)' : 'scale(1.05)';
+            }, 150);
+        }
+        function stopPulse() {
+            clearInterval(pulseInterval);
+            avatarStatic.style.transform = 'scale(1)';
+        }
 
-            // Display message
-            document.getElementById('messages').innerHTML += `<div><b>You:</b> ${msg}</div>`;
-            input.value = "";
+        async function send() {
+            const msg = userInput.value.trim();
+            if (!msg) return;
 
-            // Fetch Reply from your Flask App
-            const res = await fetch('/chat', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({message: msg})
-            });
-            const data = await res.json();
+            // User Message
+            chatBox.innerHTML += `<div class="msg user">${msg}</div>`;
+            userInput.value = '';
+            chatBox.scrollTop = chatBox.scrollTopMax;
 
-            // Display Reply
-            document.getElementById('messages').innerHTML += `<div><b>Dev:</b> ${data.reply}</div>`;
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                const data = await response.json();
 
-            // LIVE AVATAR SPEECH (Munh hilana aur Bolna)
-            // Ye library apne aap lip-sync karegi
-            head.speakText(data.reply); 
-        };
+                // Bot Message
+                chatBox.innerHTML += `<div class="msg bot">${data.reply}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
 
-        initAvatar();
+                // Voice + Animation
+                speak(data.reply);
+
+            } catch (error) {
+                console.error("Error:", error);
+                chatBox.innerHTML += `<div class="msg bot">Network error! Check your connection.</div>`;
+            }
+        }
     </script>
 </body>
 </html>
