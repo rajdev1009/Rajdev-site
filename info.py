@@ -11,8 +11,8 @@ BOT_CONFIG = {
     "NEWS_LINK": "https://news.google.com",
 
     # AVATAR PHOTOS (Yahan apni dono photos ke link dalein)
-    "AVATAR_NORMAL": "https://i.ibb.co/bMDGJ9KK/1766492848052-2.jpg", # Munh Band
-    "AVATAR_TALKING": "https://i.ibb.co/example/YOUR_MOUTH_OPEN_PHOTO.jpg", # Munh Khula
+    "AVATAR_NORMAL": "https://i.ibb.co/kY1Nyzs/1765464889401-2.jpg", # Munh Band
+    "AVATAR_TALKING": "https://rajdev1009.github.io/Rajdev-site/", # Munh Khula
 
     # ADSTERRA SMARTLINK
     "SMARTLINK_URL": "https://www.effectivegatecpm.com/gkz2ad9kk?key=e207a1458b4f261bfa34724b55f98bf3" 
