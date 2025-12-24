@@ -15,7 +15,7 @@ client = InferenceClient(
 
 @app.route('/')
 def index():
-    session.clear() # Har baar refresh karne par nayi shuruwat
+    session.clear()
     return render_template('index.html', 
                            name=BOT_CONFIG["NAME"], 
                            avatar_n=BOT_CONFIG["AVATAR_NORMAL"],
@@ -26,41 +26,46 @@ def index():
 @app.route('/chat', methods=['POST'])
 def chat():
     try:
-        user_message = request.json.get("message")
+        data = request.json
+        user_message = data.get("message", "").lower() # Message ko chhota (lowercase) kar diya
+        
         if not user_message: return jsonify({"reply": "Kuch boliye..."})
 
+        # --- 1. DIRECT OVERRIDE (AI KO BYPASS KARO) ---
+        # Agar koi ye puche, to seedha hardcoded jawab do. AI se mat puncho.
+        triggers = ["kisne banaya", "who made you", "creator", "owner", "malik", "kaun hai tera creator", "who created you", "meta", "facebook"]
+        
+        if any(word in user_message for word in triggers):
+            return jsonify({"reply": "Mujhe Raj Dev ne banaya hai. Main unka personal AI assistant hoon."})
+
+        # --- 2. AGAR NORMAL BAAT HAI TO AI SE PUNCHO ---
         if 'history' not in session: session['history'] = []
         history = session['history']
         
-        # User message add karein
         history.append({"role": "user", "content": user_message})
-        
-        # --- STRICT MEMORY CONTROL ---
-        # Sirf last 4 messages yaad rakhega taaki confuse na ho
-        if len(history) > 4: 
-            history = history[-4:]
+        if len(history) > 4: history = history[-4:]
 
-        # --- STRICT INSTRUCTION ---
-        # Har baar AI ko yaad dilayenge ki wo kaun hai
+        # System Prompt (Backup ke liye)
         system_instruction = {
             "role": "system", 
-            "content": "You are Dev, a helpful assistant. You speak in Hinglish (Hindi+English). Answer ONLY what is asked. Keep answers short and direct. Do not hallucinate."
+            "content": "You are Dev, an AI assistant created by Raj Dev. Answer briefly in Hinglish."
         }
         
         messages = [system_instruction] + history
         
-        # --- LOGIC CONTROL ---
-        # temperature=0.5 matlab "Creativity Kam, Accuracy Zyada"
         completion = client.chat_completion(
             model=Config.MODEL_ID, 
             messages=messages, 
             max_tokens=150,
-            temperature=0.5 
+            temperature=0.5
         )
         
         reply = completion.choices[0].message.content
         
-        # Assistant ka reply save karein
+        # Double Check: Agar AI ne galti se Meta bol diya, to replace kar do
+        if "Meta" in reply or "Facebook" in reply:
+            reply = "Mujhe Raj Dev ne develop kiya hai."
+
         history.append({"role": "assistant", "content": reply})
         session['history'] = history
         
@@ -68,7 +73,7 @@ def chat():
         
     except Exception as e:
         print(f"Error: {e}")
-        return jsonify({"reply": "Maaf kijiye, main samajh nahi paya. Dobara boliye."})
+        return jsonify({"reply": "Network issue. Dobara puchiye."})
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8000))
