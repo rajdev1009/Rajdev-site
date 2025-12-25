@@ -1,325 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Raj Dev AI | Official Portal</title>
+# --- app.py ---
+from flask import Flask, render_template, request, jsonify
+import google.generativeai as genai
+import os
+from config import Config
+from info import PHOTO_GALLERY, BOT_CONFIG
+
+app = Flask(__name__)
+
+api_key = os.environ.get("GEMINI_API_KEY") or Config.API_KEY
+genai.configure(api_key=api_key)
+
+# LATEST 2025 MODEL SETUP
+model = genai.GenerativeModel(
+    model_name="gemini-2.5-flash", 
+    system_instruction="You are Rajdev's assistant. If anyone asks for 'create image' or 'video', welcome them to animated video powered by Rajdev."
+)
+
+@app.route('/')
+def index():
+    return render_template('index.html', 
+                           name=BOT_CONFIG["NAME"], 
+                           avatar=BOT_CONFIG["AVATAR"],
+                           news_link=BOT_CONFIG["NEWS_LINK"],
+                           tg=BOT_CONFIG["TELEGRAM_LINK"],
+                           wa=BOT_CONFIG["WHATSAPP_LINK"],
+                           fb=BOT_CONFIG["FACEBOOK_LINK"],
+                           ig=BOT_CONFIG["INSTAGRAM_LINK"],
+                           smart_link=BOT_CONFIG["SMARTLINK_URL"],
+                           photos=PHOTO_GALLERY)
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    try:
+        data = request.get_json()
+        user_message = data.get("message")
+        chat_session = model.start_chat(history=[])
+        response = chat_session.send_message(user_message)
+        return jsonify({"reply": response.text})
+    except Exception as e:
+        return jsonify({"reply": "AI Error: " + str(e)})
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host='0.0.0.0', port=port)
     
-    <meta name="description" content="Official AI Assistant of Raj Dev. Chat now!">
-    <meta name="keywords" content="Raj Dev, AI, Chatbot">
-    
-    <link rel="icon" href="data:,">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --primary: #00ff88;
-            --secondary: #00d4ff;
-            --dark: #0a0a0a;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            background: var(--dark); 
-            color: white; 
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at 10% 20%, rgba(0, 255, 136, 0.1) 0%, transparent 20%),
-                              radial-gradient(circle at 90% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 20%);
-        }
-
-        /* --- SPLASH SCREEN --- */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .loader-ring {
-            width: 80px; height: 80px; border: 4px solid transparent;
-            border-top: 4px solid var(--primary); border-right: 4px solid var(--secondary);
-            border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;
-        }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        .enter-btn {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            border: none; padding: 15px 40px; color: #000;
-            font-weight: 800; font-size: 16px; border-radius: 30px;
-            cursor: pointer; box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
-        }
-
-        /* --- HEADER --- */
-        header {
-            padding: 20px; text-align: center;
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(10px);
-            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border);
-        }
-
-        /* --- HERO & GRID --- */
-        .hero { text-align: center; padding: 50px 20px; }
-        .hero h1 {
-            font-size: 3rem; background: linear-gradient(to right, #fff, var(--secondary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        
-        .social-bar { display: flex; justify-content: center; gap: 15px; margin: 30px 0; }
-        .social-icon {
-            width: 50px; height: 50px; background: var(--glass);
-            border: 1px solid var(--border); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 20px; text-decoration: none;
-        }
-
-        .grid-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px; max-width: 1200px; margin: auto; padding: 20px; padding-bottom: 120px;
-        }
-        
-        .news-card {
-            background: var(--glass); border: 1px solid var(--border);
-            border-radius: 20px; overflow: hidden; backdrop-filter: blur(5px);
-        }
-        .news-img { width: 100%; height: 200px; object-fit: cover; }
-        .news-content { padding: 20px; }
-        .download-btn {
-            display: block; width: 100%; padding: 12px; margin-top: 15px;
-            background: transparent; border: 1px solid var(--primary);
-            color: var(--primary); text-align: center; text-decoration: none;
-            font-weight: bold; border-radius: 10px;
-        }
-
-        /* --- CHAT BUBBLE --- */
-        #chat-bubble {
-            position: fixed; bottom: 30px; right: 30px;
-            background: linear-gradient(135deg, #111, #222);
-            border: 2px solid var(--primary);
-            padding: 15px 25px; border-radius: 50px;
-            cursor: pointer; z-index: 1001; display: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            align-items: center; gap: 12px;
-        }
-
-        /* --- CHAT WINDOW --- */
-        .chat-window {
-            position: fixed; bottom: 100px; right: 30px;
-            width: 350px; height: 500px;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 25px; display: none; flex-direction: column;
-            z-index: 1000; overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-        }
-
-        .chat-header {
-            background: rgba(255,255,255,0.05); padding: 20px;
-            text-align: center; border-bottom: 1px solid var(--border);
-        }
-        
-        .avatar-box {
-            width: 90px; height: 90px; margin: auto;
-            border-radius: 50%; padding: 3px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-        }
-        #dev-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        
-        /* Animation */
-        @keyframes glowPulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(0, 255, 136, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
-        }
-        .talking-active { animation: glowPulse 1s infinite; transform: scale(1.05); }
-
-        #messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        
-        .msg { padding: 12px 18px; border-radius: 15px; font-size: 14px; max-width: 80%; }
-        .bot { background: rgba(255,255,255,0.1); color: #fff; align-self: flex-start; }
-        .user { background: var(--primary); color: #000; align-self: flex-end; }
-
-        .input-zone {
-            padding: 15px; background: rgba(0,0,0,0.5);
-            display: flex; gap: 10px; border-top: 1px solid var(--border);
-        }
-        #user-input {
-            flex: 1; background: transparent; border: 1px solid var(--border);
-            color: white; padding: 12px; border-radius: 50px; outline: none;
-        }
-        .send-btn {
-            width: 45px; height: 45px; border-radius: 50%;
-            background: var(--primary); border: none; cursor: pointer;
-            color: #000; display: flex; align-items: center; justify-content: center;
-        }
-
-        @media(max-width: 450px) {
-            .chat-window { bottom: 0; right: 0; width: 100%; height: 100%; border-radius: 0; }
-            #chat-bubble { bottom: 20px; right: 20px; }
-            .hero h1 { font-size: 2rem; }
-        }
-    </style>
-</head>
-<body>
-
-    <div id="splash-screen">
-        <div class="loader-ring"></div>
-        <h2 style="margin-bottom: 20px; letter-spacing: 3px;">INITIALIZING...</h2>
-        <button class="enter-btn" onclick="activateSystem()">ENTER SYSTEM</button>
-    </div>
-
-    <header>
-        <h3 style="color: var(--primary); letter-spacing: 2px;">RAJ <span style="color:white">DEV</span></h3>
-    </header>
-
-    <div class="hero">
-        <h1>FUTURE OF NEWS</h1>
-        <p>Curated by Raj Dev</p>
-        
-        <div class="social-bar">
-            <a href="{{ config_links.FACEBOOK_LINK }}" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-            <a href="{{ config_links.INSTAGRAM_LINK }}" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
-            <a href="{{ config_links.TELEGRAM_LINK }}" target="_blank" class="social-icon"><i class="fab fa-telegram-plane"></i></a>
-            <a href="{{ config_links.WHATSAPP_LINK }}" target="_blank" class="social-icon"><i class="fab fa-whatsapp"></i></a>
-        </div>
-    </div>
-
-    <div class="grid-container">
-        {% for photo in photos %}
-        <div class="news-card">
-            <img src="{{ photo.url }}" class="news-img">
-            <div class="news-content">
-                <p class="news-text">{{ photo.text }}</p>
-                <a href="{{ smart_link }}" target="_blank" class="download-btn">DOWNLOAD</a>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
-    <div id="chat-bubble" onclick="toggleChat(event)">
-        <i class="fas fa-robot" style="font-size: 24px; color: var(--primary);"></i>
-        <div>
-            <div style="font-size: 12px; color: #888;">AI Assistant</div>
-            <div style="font-weight: bold; font-size: 16px;">Ask Dev</div>
-        </div>
-    </div>
-
-    <div class="chat-window" id="chat-window" onclick="event.stopPropagation()">
-        <button onclick="closeChat()" style="position:absolute; top:15px; right:15px; background:none; border:none; color:white; cursor:pointer;">
-            <i class="fas fa-times" style="font-size: 20px;"></i>
-        </button>
-
-        <div class="chat-header">
-            <div class="avatar-box"><img id="dev-img" src="{{ avatar_n }}" alt="Dev"></div>
-            <h4 style="margin-top: 10px;">DEV AI</h4>
-            <span style="font-size: 10px; color: var(--primary);">● ONLINE</span>
-        </div>
-
-        <div id="messages">
-            <div class="msg bot">Namaste! Main Raj Dev ka assistant hoon.</div>
-        </div>
-
-        <div class="input-zone">
-            <input type="text" id="user-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter') send()">
-            <button class="send-btn" onclick="send()"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <script>
-        let voiceEnabled = false;
-
-        function activateSystem() {
-            const synth = window.speechSynthesis;
-            synth.speak(new SpeechSynthesisUtterance("Welcome to Raj Dev System"));
-            document.getElementById('splash-screen').style.display = 'none';
-            document.getElementById('chat-bubble').style.display = 'flex';
-            voiceEnabled = true;
-            synth.getVoices();
-        }
-
-        // Toggle Chat & Stop Propagation
-        function toggleChat(event) {
-            if(event) event.stopPropagation(); // Bubble click ko document tak mat jane do
-            
-            const win = document.getElementById('chat-window');
-            const bubble = document.getElementById('chat-bubble');
-            
-            win.style.display = 'flex';
-            bubble.style.display = 'none';
-        }
-
-        function closeChat() {
-            const win = document.getElementById('chat-window');
-            const bubble = document.getElementById('chat-bubble');
-            win.style.display = 'none';
-            bubble.style.display = 'flex';
-        }
-
-        // CLICK OUTSIDE TO CLOSE LOGIC
-        document.addEventListener('click', function(event) {
-            const win = document.getElementById('chat-window');
-            const bubble = document.getElementById('chat-bubble');
-            
-            // Agar window khuli hai, aur click window ke andar nahi hai
-            if (win.style.display === 'flex') {
-                // Check if click target is NOT the window or its children
-                if (!win.contains(event.target)) {
-                    closeChat();
-                }
-            }
-        });
-
-        function speak(text) {
-            if (!voiceEnabled) return;
-            const synth = window.speechSynthesis;
-            synth.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            const voices = synth.getVoices();
-            const img = document.getElementById('dev-img');
-
-            let selectedVoice = voices.find(v => v.name.includes("Google Hindi") || v.lang === "hi-IN");
-            if (selectedVoice) utter.voice = selectedVoice;
-
-            utter.lang = 'hi-IN';
-            utter.pitch = 1.0; 
-            utter.rate = 1.0;
-
-            utter.onstart = () => { img.classList.add('talking-active'); };
-            utter.onend = () => { img.classList.remove('talking-active'); };
-            utter.onerror = () => { img.classList.remove('talking-active'); };
-
-            synth.speak(utter);
-        }
-
-        async function send() {
-            const input = document.getElementById('user-input');
-            const box = document.getElementById('messages');
-            const msg = input.value.trim();
-            if(!msg) return;
-
-            box.innerHTML += `<div class="msg user">${msg}</div>`;
-            input.value = '';
-            box.scrollTop = box.scrollHeight;
-
-            try {
-                const res = await fetch('/chat', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({message: msg})
-                });
-                const data = await res.json();
-                
-                box.innerHTML += `<div class="msg bot">${data.reply}</div>`;
-                box.scrollTop = box.scrollHeight;
-                setTimeout(() => { speak(data.reply); }, 50);
-
-            } catch (e) {
-                box.innerHTML += `<div class="msg bot">Error. Refresh page.</div>`;
-            }
-        }
-        
-        window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
-    </script>
-</body>
-</html>
