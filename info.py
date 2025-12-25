@@ -2,7 +2,7 @@
 
 BOT_CONFIG = {
     "NAME": "Raj's Assistant",
-    "AVATAR": "https://cdn-icons-png.flaticon.com/512/4712/4712027.png", 
+    "AVATAR": "https://i.ibb.co/kY1Nyzs/1765464889401-2.jpg", 
     "NEWS_LINK": "https://news.google.com",
     
     # UPDATED SOCIAL LINKS
