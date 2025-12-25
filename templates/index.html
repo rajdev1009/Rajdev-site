@@ -1,46 +1,126 @@
-# --- app.py ---
-from flask import Flask, render_template, request, jsonify
-import google.generativeai as genai
-import os
-from config import Config
-from info import PHOTO_GALLERY, BOT_CONFIG
-
-app = Flask(__name__)
-
-api_key = os.environ.get("GEMINI_API_KEY") or Config.API_KEY
-genai.configure(api_key=api_key)
-
-# LATEST 2025 MODEL SETUP
-model = genai.GenerativeModel(
-    model_name="gemini-2.5-flash", 
-    system_instruction="You are Rajdev's assistant. If anyone asks for 'create image' or 'video', welcome them to animated video powered by Rajdev."
-)
-
-@app.route('/')
-def index():
-    return render_template('index.html', 
-                           name=BOT_CONFIG["NAME"], 
-                           avatar=BOT_CONFIG["AVATAR"],
-                           news_link=BOT_CONFIG["NEWS_LINK"],
-                           tg=BOT_CONFIG["TELEGRAM_LINK"],
-                           wa=BOT_CONFIG["WHATSAPP_LINK"],
-                           fb=BOT_CONFIG["FACEBOOK_LINK"],
-                           ig=BOT_CONFIG["INSTAGRAM_LINK"],
-                           smart_link=BOT_CONFIG["SMARTLINK_URL"],
-                           photos=PHOTO_GALLERY)
-
-@app.route('/chat', methods=['POST'])
-def chat():
-    try:
-        data = request.get_json()
-        user_message = data.get("message")
-        chat_session = model.start_chat(history=[])
-        response = chat_session.send_message(user_message)
-        return jsonify({"reply": response.text})
-    except Exception as e:
-        return jsonify({"reply": "AI Error: " + str(e)})
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8000))
-    app.run(host='0.0.0.0', port=port)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ name }}</title>
     
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #4f46e5; --bg: #f3f4f6; --special: #ff4757; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        
+        /* Chat Design */
+        .chat-card { width: 100%; max-width: 500px; height: 500px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; margin-bottom: 20px; }
+        .header { background: var(--primary); color: white; padding: 15px; display: flex; align-items: center; gap: 10px; }
+        .header img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid white; }
+        
+        .social-bar { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; padding: 10px; background: #fff; border-bottom: 1px solid #eee; }
+        .s-btn { text-decoration: none; color: white; padding: 6px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+
+        #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
+        .msg { padding: 10px 15px; border-radius: 15px; font-size: 14px; max-width: 85%; }
+        .bot { background: var(--primary); color: white; align-self: flex-start; }
+        .user { background: #e2e2e2; color: #333; align-self: flex-end; }
+
+        /* Input area with Special Video Button */
+        .input-area { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 8px; background: white; align-items: center; }
+        input { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 10px; outline: none; }
+        .special-btn { background: var(--special); color: white; border: none; width: 42px; height: 42px; border-radius: 12px; cursor: pointer; }
+
+        /* Gallery - Single Column */
+        .gallery { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; }
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .card img { width: 100%; height: auto; display: block; }
+        .card-info { padding: 12px; font-size: 14px; color: #444; }
+
+        /* Ad Unit under each photo */
+        .ad-unit { width: 100%; background: #fff; border: 1px dashed #bbb; border-radius: 12px; padding: 10px; text-align: center; margin-top: -10px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="chat-card">
+        <div class="header">
+            <img src="{{ avatar }}"> <strong>{{ name }}</strong>
+        </div>
+        <div class="social-bar">
+            <a href="{{ tg }}" class="s-btn" style="background:#0088cc"><i class="fab fa-telegram"></i> TG</a>
+            <a href="{{ wa }}" class="s-btn" style="background:#e4405f"><i class="fab fa-instagram"></i> WA</a>
+            <a href="{{ fb }}" class="s-btn" style="background:#1877f2"><i class="fab fa-facebook"></i> FB</a>
+            <a href="{{ ig }}" class="s-btn" style="background:#e4405f"><i class="fab fa-instagram"></i> IG</a>
+        </div>
+        <div id="chat-box">
+            <div class="msg bot">Namaste! Main Raj ka assistant hoon. 2025 ki Top News niche hain. Type "create image" to start!</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Kuch likhein...">
+            <input type="file" id="photo-upload" style="display:none" accept="image/*" onchange="handleUpload()">
+            
+            <button class="special-btn" onclick="triggerSpecialFeature()"><i class="fas fa-video"></i></button>
+            
+            <button style="background:var(--primary); color:white; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer;" onclick="send()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="gallery">
+        <h3 style="text-align: center; color: #333;">Media News 2025</h3>
+        {% for photo in photos %}
+        <div class="card">
+            <img src="{{ photo.url }}">
+            <div class="card-info">{{ photo.text }}</div>
+        </div>
+        <div class="ad-unit">
+            <a href="{{ smart_link }}" target="_blank" style="color:var(--primary); text-decoration:none; font-weight:bold; font-size:13px;">
+                <i class="fas fa-download"></i> Tap to Download Full HD Content
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+
+        function addBotMsg(text) {
+            chatBox.innerHTML += `<div class="msg bot">${text}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function triggerSpecialFeature() {
+            addBotMsg("Welcome tu animated video power by Rajdev");
+            document.getElementById('photo-upload').click();
+        }
+
+        function handleUpload() {
+            addBotMsg("Sorry, this feature use only Rajdev");
+            document.getElementById('photo-upload').value = "";
+        }
+
+        async function send() {
+            const input = document.getElementById('user-input');
+            const val = input.value.trim().toLowerCase();
+            if(!val) return;
+            chatBox.innerHTML += `<div class="msg user">${input.value}</div>`;
+            
+            if(val.includes("create image")) {
+                addBotMsg("Welcome tu animated video power by Rajdev");
+                input.value = ''; return;
+            }
+
+            const prompt = input.value; input.value = '';
+            try {
+                const res = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: prompt})
+                });
+                const data = await res.json();
+                addBotMsg(data.reply);
+            } catch(e) { addBotMsg("Error connecting to Gemini 2.5 Flash."); }
+        }
+    </script>
+</body>
+</html>
